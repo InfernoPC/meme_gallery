@@ -1,0 +1,6 @@
+img/*
+!img/.gitkeep
+!img/sample.png
+
+# python virtual environment
+.venv/
