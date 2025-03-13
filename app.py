@@ -9,6 +9,14 @@ import threading
 import time
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
+import json
+from tkinter import filedialog
+import subprocess
+
+# 讀取 config.json
+with open('config.json', 'r') as f:
+    config = json.load(f)
+img_dir = config.get('image_dir', 'img/')
 
 # 複製圖片到剪貼簿
 def copy_image_to_clipboard(image_path):
@@ -36,7 +44,7 @@ def get_max_columns():
     return max(1, window_width // 200)  # 確保至少 1 列
 
 # 顯示所有圖片
-def display_images(img_dir="img/"):
+def display_images(img_dir=img_dir):
     if not os.path.exists(img_dir):
         return
     
@@ -82,7 +90,7 @@ class DirectoryMonitor(FileSystemEventHandler):
 # 啟動監控
 def start_monitoring():
     observer = Observer()
-    observer.schedule(DirectoryMonitor(img_dir="img/"), path="img/", recursive=False)
+    observer.schedule(DirectoryMonitor(img_dir=img_dir), path=img_dir, recursive=False)
     observer.start()
     try:
         while True:
@@ -98,12 +106,26 @@ def on_resize(event):
     global is_resizing
     if not is_resizing:
         is_resizing = True
-        root.after(100, lambda: (display_images("img/"), reset_resize_flag()))
+        root.after(100, lambda: (display_images(img_dir), reset_resize_flag()))
 
 def reset_resize_flag():
     global is_resizing
     is_resizing = False
 
+def select_image_dir():
+    new_dir = filedialog.askdirectory()
+    if new_dir:
+        global img_dir
+        img_dir = new_dir
+        config['image_dir'] = new_dir
+        with open('config.json', 'w') as f:
+            json.dump(config, f)
+        display_images(img_dir)
+
+def open_image_dir():
+    abs_img_dir = os.path.abspath(img_dir)
+    if os.path.exists(abs_img_dir):
+        subprocess.Popen(['explorer', abs_img_dir])
 
 # 創建 Tkinter 視窗
 root = tk.Tk()
@@ -114,8 +136,14 @@ root.geometry("800x600")
 toolbar = tk.Frame(root)
 toolbar.pack(fill="x", pady=5)
 
-reload_button = tk.Button(toolbar, text="🔄 重新載入圖片", command=lambda: display_images("img/"))
+reload_button = tk.Button(toolbar, text="🔄 重新載入圖片", command=lambda: display_images(img_dir))
 reload_button.pack(side="left", padx=10)
+
+select_dir_button = tk.Button(toolbar, text="📁 選擇圖片目錄", command=select_image_dir)
+select_dir_button.pack(side="left", padx=10)
+
+open_dir_button = tk.Button(toolbar, text="📂 開啟圖片目錄", command=open_image_dir)
+open_dir_button.pack(side="left", padx=10)
 
 status_label = tk.Label(toolbar, text="", fg="green")
 status_label.pack(side="left")
@@ -149,7 +177,7 @@ canvas.bind_all("<Button-5>", lambda event: canvas.yview_scroll(1, "units"))   #
 root.bind("<Configure>", on_resize)
 
 # 初始顯示圖片
-display_images("img/")
+display_images(img_dir)
 
 # 監控 img/ 目錄變化
 monitor_thread = threading.Thread(target=start_monitoring, daemon=True)
