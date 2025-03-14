@@ -9,19 +9,13 @@ Meme Gallery 是一個簡單的圖片管理應用程式，允許用戶快速瀏�
 - 依據視窗大小調整圖片排列方式
 - 滑鼠滾輪可快速上下捲動
 - 可手動點擊按鈕重新載入圖片
+- 保存剪貼簿圖片到 `img/` 目錄，並以時間戳命名
+- 搜尋圖片檔名
+- 右鍵選單刪除或重命名圖片
 
 ## 安裝與使用
 
-### 1. 安裝 Python 環境
-確保已安裝 Python 3.8 以上版本，並啟用虛擬環境（可選）。
-
-```sh
-python -m venv venv
-source venv/bin/activate  # Mac/Linux
-venv\Scripts\activate    # Windows
-```
-
-### 2. 安裝所需套件
+### 1. 安裝所需套件
 使用以下指令安裝必要的 Python 套件：
 
 ```sh
@@ -33,14 +27,14 @@ pip install -r requirements.txt
 pip install pillow pywin32 watchdog
 ```
 
-### 3. 建立 `img/` 目錄並放入圖片
+### 2. 建立 `img/` 目錄並放入圖片
 確保專案目錄內有 `img/` 資料夾，並在裡面放入要顯示的圖片。
 
 ```sh
 mkdir img
 ```
 
-### 4. 啟動應用程式
+### 3. 啟動應用程式
 執行 `app.py` 來啟動 Meme Gallery。
 
 ```sh
