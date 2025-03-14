@@ -31,18 +31,35 @@ pip install -r requirements.txt
 pip install pillow pywin32 watchdog
 ```
 
-### 2. 建立 `img/` 目錄並放入圖片
+### 2. 下載並安裝 NaikaiFont
+從 [NaikaiFont](https://github.com/max32002/naikaifont) 下載字體並安裝。
+
+### 3. 建立 `img/` 目錄並放入圖片
 確保專案目錄內有 `img/` 資料夾，並在裡面放入要顯示的圖片。
 
 ```sh
 mkdir img
 ```
 
-### 3. 啟動應用程式
+### 4. 啟動應用程式
 執行 `app.py` 來啟動 Meme Gallery。
 
 ```sh
 python app.py
+```
+
+## 專案結構
+
+```
+meme_gallery/
+│
+├── app.py
+├── config_manager.py
+├── font_manager.py
+├── image_manager.py
+├── config.json
+├── requirements.txt
+└── README.md
 ```
 
 ## 注意事項
