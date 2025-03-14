@@ -7,7 +7,7 @@ class FontManager:
         self.font_size = self.config.get('font_size', 12)
         try:
             self.custom_font = tkfont.Font(family=self.font_family, size=self.font_size)
-        except tk.TclError:
+        except tkfont.TclError:
             self.custom_font = tkfont.Font(size=self.font_size)  # Fallback to default font
 
     def update_font(self, family, size):

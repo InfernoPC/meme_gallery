@@ -2,7 +2,7 @@ import os
 import threading
 import subprocess
 import tkinter as tk
-from tkinter import filedialog, messagebox
+from tkinter import filedialog, messagebox, font as tkfont
 from PIL import Image, ImageTk
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
