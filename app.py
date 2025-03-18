@@ -221,13 +221,16 @@ class MemeGalleryApp:
         new_name_var = tk.StringVar(value=os.path.splitext(image_path)[0])
         entry = tk.Entry(dialog, textvariable=new_name_var, width=50, font=self.font_manager.custom_font)
         entry.pack(pady=5)
+        entry.focus_set()
+        entry.select_range(0, tk.END)
 
-        def on_ok():
+        def on_ok(event=None):
             dialog.destroy()
 
         def on_cancel():
             dialog.destroy()
 
+        entry.bind("<Return>", on_ok)
         tk.Button(dialog, text="確定", command=on_ok, font=self.font_manager.custom_font).pack(side="left", padx=10, pady=10)
         tk.Button(dialog, text="取消", command=on_cancel, font=self.font_manager.custom_font).pack(side="right", padx=10, pady=10)
         dialog.transient(self.root)
