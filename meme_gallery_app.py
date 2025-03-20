@@ -231,7 +231,7 @@ class MemeGalleryApp:
     def open_image_dir(self):
         abs_img_dir = os.path.abspath(self.image_manager.img_dir)
         if os.path.exists(abs_img_dir):
-            subprocess.Popen(['explorer', abs_img_dir])
+            subprocess.Popen(['explorer', abs_img_dir], shell=True, creationflags=subprocess.SW_HIDE)
 
     def start_monitoring(self):
         if self.observer is None or not self.observer.is_alive():
