@@ -10,6 +10,48 @@ from pathlib import Path
 
 class Bridge(QObject):
   @pyqtSlot(str, str)
+  def moveFile(self, src_path, target_folder):
+    import shutil, os
+    src_path = os.path.abspath(src_path)
+    target_folder = os.path.abspath(target_folder)
+    if not os.path.isfile(src_path) or not os.path.isdir(target_folder):
+      print(f"[Move File Error] 檔案或目標資料夾不存在: {src_path} -> {target_folder}")
+      return
+    fname = os.path.basename(src_path)
+    dst_path = os.path.join(target_folder, fname)
+    # 防呆：不可覆蓋
+    if os.path.exists(dst_path):
+      print(f"[Move File Error] 目標已存在: {dst_path}")
+      return
+    try:
+      shutil.move(src_path, dst_path)
+      self.reload_func(os.path.dirname(src_path))
+    except Exception as e:
+      print(f"[Move File Error] {e}")
+
+  @pyqtSlot(str, str)
+  def moveFolder(self, src_path, target_folder):
+    import shutil, os
+    src_path = os.path.abspath(src_path)
+    target_folder = os.path.abspath(target_folder)
+    if not os.path.isdir(src_path) or not os.path.isdir(target_folder):
+      print(f"[Move Folder Error] 資料夾不存在: {src_path} -> {target_folder}")
+      return
+    # 防止移動到自己或子資料夾
+    if src_path == target_folder or target_folder.startswith(src_path + os.sep):
+      print(f"[Move Folder Error] 不能移動到自己或子資料夾")
+      return
+    fname = os.path.basename(src_path)
+    dst_path = os.path.join(target_folder, fname)
+    if os.path.exists(dst_path):
+      print(f"[Move Folder Error] 目標已存在: {dst_path}")
+      return
+    try:
+      shutil.move(src_path, dst_path)
+      self.reload_func(os.path.dirname(src_path))
+    except Exception as e:
+      print(f"[Move Folder Error] {e}")
+  @pyqtSlot(str, str)
   def createFolder(self, cur_path, folder_name):
     import os
     # cur_path 可能為相對路徑
@@ -123,6 +165,10 @@ def main():
 
 
     folder_tags = ''
+    # 非最上層才顯示 ..
+    if os.path.normpath(cur_dir) != os.path.normpath(base_img_dir):
+      parent_path = os.path.dirname(cur_dir)
+      folder_tags += f'<div class="folderbox" data-folder="{parent_path}" data-up="1"><div class="foldericon">⬆️</div><div class="foldername">..</div></div>'
     for folder in folders:
       folder_path = os.path.abspath(os.path.join(cur_dir, folder))
       folder_tags += f'<div class="folderbox" data-folder="{folder_path}"><div class="foldericon">📁</div><div class="foldername">{folder}</div></div>'

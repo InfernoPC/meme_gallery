@@ -59,7 +59,12 @@
             hint.style.opacity = 1;
             setTimeout(() => hint.style.opacity = 0, 900);
         });
-        img.addEventListener('dragstart', e => e.preventDefault());
+        // 支援拖曳圖片
+        img.setAttribute('draggable', 'true');
+        img.addEventListener('dragstart', function(e) {
+            e.dataTransfer.setData('type', 'file');
+            e.dataTransfer.setData('path', img.getAttribute('data-path'));
+        });
         img.addEventListener('contextmenu', function(e) {
             e.preventDefault();
             const oldPath = img.getAttribute('data-path');
@@ -89,10 +94,39 @@
         });
     });
     document.querySelectorAll('.folderbox').forEach(function (box) {
-        box.addEventListener('click', function () {
+        box.addEventListener('dblclick', function () {
+            // .. 或一般資料夾都要點兩下才切換
             bridge.openFolder(box.getAttribute('data-folder'));
         });
+        // 支援拖曳資料夾（.. 不可被拖曳）
+        if (!box.dataset.up) {
+            box.setAttribute('draggable', 'true');
+            box.addEventListener('dragstart', function(e) {
+                e.dataTransfer.setData('type', 'folder');
+                e.dataTransfer.setData('path', box.getAttribute('data-folder'));
+            });
+        }
+        // 支援成為拖曳目標（.. 也可當目標）
+        box.addEventListener('dragover', function(e) {
+            e.preventDefault();
+        });
+        box.addEventListener('drop', function(e) {
+            e.preventDefault();
+            const srcType = e.dataTransfer.getData('type');
+            const srcPath = e.dataTransfer.getData('path');
+            const targetPath = box.getAttribute('data-folder');
+            // .. 也可當目標（搬到上一層）
+            if (srcType === 'file') {
+                bridge.moveFile(srcPath, targetPath);
+            } else if (srcType === 'folder') {
+                if (srcPath !== targetPath && !targetPath.startsWith(srcPath + '\\')) {
+                    bridge.moveFolder(srcPath, targetPath);
+                }
+            }
+        });
         box.addEventListener('contextmenu', function(e) {
+            // .. 資料夾不顯示右鍵選單
+            if (box.dataset.up === '1') return;
             e.preventDefault();
             const oldPath = box.getAttribute('data-folder');
             const oldName = oldPath.split(/[/\\]/).pop();
