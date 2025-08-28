@@ -9,6 +9,52 @@ import sys, os
 from pathlib import Path
 
 class Bridge(QObject):
+  @pyqtSlot(str)
+  def deleteFolder(self, folder_path):
+    import shutil
+    folder_path = os.path.abspath(folder_path)
+    try:
+      shutil.rmtree(folder_path)
+      self.reload_func(os.path.dirname(folder_path))
+    except Exception as e:
+      print(f"[Delete Folder Error] {e}")
+  @pyqtSlot(str)
+  def deleteFile(self, file_path):
+    import os
+    file_path = os.path.abspath(file_path)
+    try:
+      os.remove(file_path)
+      self.reload_func(os.path.dirname(file_path))
+    except Exception as e:
+      print(f"[Delete File Error] {e}")
+  @pyqtSlot(str, str)
+  def renameFolder(self, old_path, new_name):
+    import shutil
+    import pathlib
+    old_path = os.path.abspath(old_path)
+    new_path = os.path.join(os.path.dirname(old_path), new_name)
+    # 防呆：不可覆蓋已存在資料夾
+    if os.path.exists(new_path):
+      return
+    try:
+      shutil.move(old_path, new_path)
+      self.reload_func(os.path.dirname(new_path))
+    except Exception as e:
+      print(f"[Rename Folder Error] {e}")
+  @pyqtSlot(str, str)
+  def renameFile(self, old_path, new_name):
+    import shutil
+    import pathlib
+    old_path = os.path.abspath(old_path)
+    new_path = os.path.join(os.path.dirname(old_path), new_name)
+    # 防呆：不可覆蓋已存在檔案
+    if os.path.exists(new_path):
+      return
+    try:
+      shutil.move(old_path, new_path)
+      self.reload_func(os.path.dirname(new_path))
+    except Exception as e:
+      print(f"[Rename Error] {e}")
   def __init__(self, reload_func):
     super().__init__()
     self.reload_func = reload_func

@@ -2,6 +2,32 @@
 new QWebChannel(qt.webChannelTransport, function (channel) {
     const bridge = channel.objects.bridge;
     const hint = document.getElementById('hint');
+    // 建立右鍵選單
+    function createContextMenu(items, x, y) {
+        let menu = document.createElement('div');
+        menu.className = 'context-menu';
+        items.forEach(item => {
+            let btn = document.createElement('div');
+            btn.className = 'context-menu-item';
+            btn.textContent = item.label;
+            btn.onclick = function() {
+                item.action();
+                document.body.removeChild(menu);
+            };
+            menu.appendChild(btn);
+        });
+        menu.style.left = x + 'px';
+        menu.style.top = y + 'px';
+        document.body.appendChild(menu);
+        // 點擊其他地方關閉
+        setTimeout(() => {
+            document.addEventListener('click', function handler() {
+                if (menu.parentNode) menu.parentNode.removeChild(menu);
+                document.removeEventListener('click', handler);
+            });
+        }, 0);
+    }
+
     document.querySelectorAll('.imgbox img').forEach(function (img) {
         img.addEventListener('click', function () {
             bridge.copyApngFile(img.getAttribute('data-path'));
@@ -10,10 +36,61 @@ new QWebChannel(qt.webChannelTransport, function (channel) {
             setTimeout(() => hint.style.opacity = 0, 900);
         });
         img.addEventListener('dragstart', e => e.preventDefault());
+        img.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            const oldPath = img.getAttribute('data-path');
+            const oldName = oldPath.split(/[/\\]/).pop();
+            const dotIdx = oldName.lastIndexOf('.');
+            const base = dotIdx > 0 ? oldName.slice(0, dotIdx) : oldName;
+            const ext = dotIdx > 0 ? oldName.slice(dotIdx) : '';
+            createContextMenu([
+                {
+                    label: '刪除圖片',
+                    action: function() {
+                        if (confirm('確定要刪除圖片嗎？')) {
+                            bridge.deleteFile(oldPath);
+                        }
+                    }
+                },
+                {
+                    label: '變更名稱',
+                    action: function() {
+                        const input = prompt('變更檔案名稱：', base);
+                        if (input && input !== base) {
+                            bridge.renameFile(oldPath, input + ext);
+                        }
+                    }
+                }
+            ], e.clientX, e.clientY);
+        });
     });
     document.querySelectorAll('.folderbox').forEach(function (box) {
         box.addEventListener('click', function () {
             bridge.openFolder(box.getAttribute('data-folder'));
+        });
+        box.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            const oldPath = box.getAttribute('data-folder');
+            const oldName = oldPath.split(/[/\\]/).pop();
+            createContextMenu([
+                {
+                    label: '刪除資料夾',
+                    action: function() {
+                        if (confirm('確定要刪除此資料夾及其所有內容嗎？')) {
+                            bridge.deleteFolder(oldPath);
+                        }
+                    }
+                },
+                {
+                    label: '變更名稱',
+                    action: function() {
+                        const input = prompt('變更資料夾名稱：', oldName);
+                        if (input && input !== oldName) {
+                            bridge.renameFolder(oldPath, input);
+                        }
+                    }
+                }
+            ], e.clientX, e.clientY);
         });
     });
     // 點擊 breadcrumb 跳資料夾

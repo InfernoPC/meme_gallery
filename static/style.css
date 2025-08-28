@@ -1,3 +1,27 @@
+/* ===== Context Menu ===== */
+.context-menu {
+    position: fixed;
+    z-index: 9999;
+    background: rgba(255, 192, 203, 0.95);
+    border-radius: 10px;
+    box-shadow: 0 2px 16px #ffb6c1aa;
+    min-width: 120px;
+    padding: 6px 0;
+    font-size: 16px;
+    color: #d0006f;
+    border: 1.5px solid #fff0fa;
+    backdrop-filter: blur(2px);
+}
+.context-menu-item {
+    padding: 8px 20px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    border-radius: 6px;
+}
+.context-menu-item:hover {
+    background: #fff0fa;
+    color: #ff1493;
+}
 
 /* ===== Reset & Layout ===== */
 html, body {
