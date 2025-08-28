@@ -1,38 +1,60 @@
-    // 初始化 WebChannel
-    new QWebChannel(qt.webChannelTransport, function (channel) {
-        const bridge = channel.objects.bridge;
-        const hint = document.getElementById('hint');
+// 初始化 WebChannel
+new QWebChannel(qt.webChannelTransport, function (channel) {
+    const bridge = channel.objects.bridge;
+    const hint = document.getElementById('hint');
 
-        // 建立資料夾功能
-        const btnNewFolder = document.getElementById('btnNewFolder');
-        const btnReloadAll = document.getElementById('btnReloadAll');
-        if (btnReloadAll) {
-            btnReloadAll.addEventListener('click', function() {
-                // 取得 img 目錄絕對路徑（由 Python 端判斷）
-                bridge.openFolder('img');
-            });
+    // 建立資料夾功能
+    const btnNewFolder = document.getElementById('btnNewFolder');
+    const btnReloadAll = document.getElementById('btnReloadAll');
+    if (btnReloadAll) {
+        btnReloadAll.addEventListener('click', function () {
+            // 取得 img 目錄絕對路徑（由 Python 端判斷）
+            bridge.openFolder('img');
+        });
+    }
+    if (btnNewFolder) {
+        btnNewFolder.addEventListener('click', function () {
+            let folderName = prompt('請輸入新資料夾名稱：');
+            if (!folderName) return;
+            folderName = folderName.trim();
+            // 禁止非法字元: \/:*?"<>|
+            if (!folderName || /[\\/:*?"<>|]/.test(folderName)) {
+                alert('資料夾名稱不能包含以下字元：\\ / : * ? " < > |，且不能為空白');
+                return;
+            }
+            // 取得目前資料夾路徑，並去除每個路徑段的空白
+            let curPath = '';
+            const pathSpan = document.querySelector('.path');
+            if (pathSpan) {
+                curPath = pathSpan.textContent || '';
+                // 將每個路徑段 trim
+                curPath = curPath.split(/[/\\]/).map(s => s.trim()).filter(Boolean).join('\\');
+            }
+            bridge.createFolder(curPath, folderName);
+        });
+    }
+    // 貼上圖片功能（由 PyQt 端處理剪貼簿）
+    function getCurrentDir() {
+        let curDir = '';
+        const pathSpan = document.querySelector('.path');
+        if (pathSpan) {
+            curDir = pathSpan.getAttribute('data-curr-dir') || '';
         }
-        if (btnNewFolder) {
-            btnNewFolder.addEventListener('click', function() {
-                let folderName = prompt('請輸入新資料夾名稱：');
-                if (!folderName) return;
-                folderName = folderName.trim();
-                // 禁止非法字元: \/:*?"<>|
-                if (!folderName || /[\\/:*?"<>|]/.test(folderName)) {
-                    alert('資料夾名稱不能包含以下字元：\\ / : * ? " < > |，且不能為空白');
-                    return;
-                }
-                // 取得目前資料夾路徑，並去除每個路徑段的空白
-                let curPath = '';
-                const pathSpan = document.querySelector('.path');
-                if (pathSpan) {
-                    curPath = pathSpan.textContent || '';
-                    // 將每個路徑段 trim
-                    curPath = curPath.split(/[/\\]/).map(s => s.trim()).filter(Boolean).join('\\');
-                }
-                bridge.createFolder(curPath, folderName);
-            });
-        }
+        return curDir;
+    }
+    // 按鈕貼上
+    const btnPasteImage = document.getElementById('btnPasteImage');
+    if (btnPasteImage) {
+        btnPasteImage.addEventListener('click', function () {
+            bridge.pasteImageFromClipboard(getCurrentDir());
+        });
+    }
+    // Ctrl+V 支援
+    document.addEventListener('paste', function (e) {
+        bridge.pasteImageFromClipboard(getCurrentDir());
+        e.preventDefault();
+    });
+
     // 建立右鍵選單
     function createContextMenu(items, x, y) {
         let menu = document.createElement('div');
@@ -41,7 +63,7 @@
             let btn = document.createElement('div');
             btn.className = 'context-menu-item';
             btn.textContent = item.label;
-            btn.onclick = function() {
+            btn.onclick = function () {
                 item.action();
                 document.body.removeChild(menu);
             };
@@ -68,21 +90,20 @@
         });
         // 支援拖曳圖片
         img.setAttribute('draggable', 'true');
-        img.addEventListener('dragstart', function(e) {
+        img.addEventListener('dragstart', function (e) {
             e.dataTransfer.setData('type', 'file');
             e.dataTransfer.setData('path', img.getAttribute('data-path'));
         });
-        img.addEventListener('contextmenu', function(e) {
+        img.addEventListener('contextmenu', function (e) {
             e.preventDefault();
             const oldPath = img.getAttribute('data-path');
             const oldName = oldPath.split(/[/\\]/).pop();
             const dotIdx = oldName.lastIndexOf('.');
             const base = dotIdx > 0 ? oldName.slice(0, dotIdx) : oldName;
             const ext = dotIdx > 0 ? oldName.slice(dotIdx) : '';
-            createContextMenu([
-                {
+            createContextMenu([{
                     label: '刪除圖片',
-                    action: function() {
+                    action: function () {
                         if (confirm('確定要刪除圖片嗎？')) {
                             bridge.deleteFile(oldPath);
                         }
@@ -90,7 +111,7 @@
                 },
                 {
                     label: '變更名稱',
-                    action: function() {
+                    action: function () {
                         const input = prompt('變更檔案名稱：', base);
                         if (input && input !== base) {
                             bridge.renameFile(oldPath, input + ext);
@@ -108,16 +129,16 @@
         // 支援拖曳資料夾（.. 不可被拖曳）
         if (!box.dataset.up) {
             box.setAttribute('draggable', 'true');
-            box.addEventListener('dragstart', function(e) {
+            box.addEventListener('dragstart', function (e) {
                 e.dataTransfer.setData('type', 'folder');
                 e.dataTransfer.setData('path', box.getAttribute('data-folder'));
             });
         }
         // 支援成為拖曳目標（.. 也可當目標）
-        box.addEventListener('dragover', function(e) {
+        box.addEventListener('dragover', function (e) {
             e.preventDefault();
         });
-        box.addEventListener('drop', function(e) {
+        box.addEventListener('drop', function (e) {
             e.preventDefault();
             const srcType = e.dataTransfer.getData('type');
             const srcPath = e.dataTransfer.getData('path');
@@ -131,16 +152,15 @@
                 }
             }
         });
-        box.addEventListener('contextmenu', function(e) {
+        box.addEventListener('contextmenu', function (e) {
             // .. 資料夾不顯示右鍵選單
             if (box.dataset.up === '1') return;
             e.preventDefault();
             const oldPath = box.getAttribute('data-folder');
             const oldName = oldPath.split(/[/\\]/).pop();
-            createContextMenu([
-                {
+            createContextMenu([{
                     label: '刪除資料夾',
-                    action: function() {
+                    action: function () {
                         if (confirm('確定要刪除此資料夾及其所有內容嗎？')) {
                             bridge.deleteFolder(oldPath);
                         }
@@ -148,7 +168,7 @@
                 },
                 {
                     label: '變更名稱',
-                    action: function() {
+                    action: function () {
                         const input = prompt('變更資料夾名稱：', oldName);
                         if (input && input !== oldName) {
                             bridge.renameFolder(oldPath, input);
@@ -169,9 +189,10 @@
     // 搜尋功能
     const searchInput = document.getElementById('searchInput');
     const clearSearch = document.getElementById('clearSearch');
+
     function filterImages() {
         const val = searchInput.value.trim().toLowerCase();
-        document.querySelectorAll('.imgbox').forEach(function(box) {
+        document.querySelectorAll('.imgbox').forEach(function (box) {
             const img = box.querySelector('img');
             const name = img ? img.getAttribute('data-path').split(/[/\\]/).pop().toLowerCase() : '';
             if (!val || name.includes(val)) {
@@ -183,7 +204,7 @@
     }
     if (searchInput) {
         searchInput.addEventListener('input', filterImages);
-        searchInput.addEventListener('keydown', function(e) {
+        searchInput.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
                 searchInput.value = '';
                 filterImages();
@@ -191,7 +212,7 @@
         });
     }
     if (clearSearch) {
-        clearSearch.addEventListener('click', function() {
+        clearSearch.addEventListener('click', function () {
             searchInput.value = '';
             filterImages();
             searchInput.focus();

@@ -1,5 +1,5 @@
 # pip install PyQt6 PyQt6-WebEngine
-from PyQt6.QtWidgets import QApplication, QFileDialog
+from PyQt6.QtWidgets import QApplication
 from PyQt6.QtCore import QObject, pyqtSlot, QUrl
 from PyQt6.QtGui import QGuiApplication
 from PyQt6.QtCore import QMimeData
@@ -9,6 +9,84 @@ import sys, os
 from pathlib import Path
 
 class Bridge(QObject):
+
+  @pyqtSlot(str)
+  def pasteImageFromClipboard(self, target_folder):
+    import os, datetime
+    from PyQt6.QtGui import QGuiApplication
+    from PIL import Image
+    from io import BytesIO
+    clipboard = QGuiApplication.clipboard()
+    mime = clipboard.mimeData()
+    print("target folder = ", target_folder)
+    if mime.hasImage():
+      qtimg = clipboard.image()
+      if qtimg.isNull():
+        print('[Paste Image Error] 剪貼簿圖片為空')
+        return
+      # 轉成 PIL Image
+      buffer = BytesIO()
+      pil_img = Image.fromqimage(qtimg)
+      # 自動產生檔名
+      ts = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+      fname = f'paste_{ts}.png'
+      out_path = os.path.join(target_folder, fname)
+      pil_img.save(out_path)
+      self.reload_func(target_folder)
+      print(f'[Paste Image] 已儲存 {out_path}')
+    elif mime.hasUrls():
+      # 有些截圖工具會以檔案方式放剪貼簿
+      for url in mime.urls():
+        local_path = url.toLocalFile()
+        if os.path.isfile(local_path):
+          ext = os.path.splitext(local_path)[1].lower()
+          if ext in ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp']:
+            ts = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+            fname = f'paste_{ts}{ext}'
+            out_path = os.path.join(target_folder, fname)
+            with open(local_path, 'rb') as src, open(out_path, 'wb') as dst:
+              dst.write(src.read())
+            self.reload_func(target_folder)
+            print(f'[Paste Image] 已儲存 {out_path}')
+            return
+      print('[Paste Image Error] 剪貼簿沒有圖片檔案')
+    else:
+      print('[Paste Image Error] 剪貼簿沒有圖片')
+
+  @pyqtSlot(str, str)
+  def saveClipboardImage(self, target_folder, base64data):
+    import os, base64, re, datetime
+    from PIL import Image
+    from io import BytesIO
+    # base64data: data:image/png;base64,...
+    m = re.match(r'data:(image/\w+);base64,(.+)', base64data)
+    if not m:
+      print('[Paste Image Error] 格式錯誤')
+      return
+    mime, b64 = m.groups()
+    ext = {
+      'image/png': '.png',
+      'image/jpeg': '.jpg',
+      'image/gif': '.gif',
+      'image/webp': '.webp',
+    }.get(mime, '.png')
+    try:
+      imgdata = base64.b64decode(b64)
+      # 自動產生檔名
+      ts = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+      fname = f'paste_{ts}{ext}'
+      out_path = os.path.join(target_folder, fname)
+      # gif 直接寫檔，其他用 PIL 處理
+      if ext == '.gif':
+        with open(out_path, 'wb') as f:
+          f.write(imgdata)
+      else:
+        img = Image.open(BytesIO(imgdata))
+        img.save(out_path)
+      self.reload_func(target_folder)
+      print(f'[Paste Image] 已儲存 {out_path}')
+    except Exception as e:
+      print(f'[Paste Image Error] {e}')
   @pyqtSlot(str, str)
   def moveFile(self, src_path, target_folder):
     import shutil, os
@@ -206,25 +284,27 @@ def main():
     rel_parts = []
     cur = cur_dir
     while True:
-        if os.path.normpath(cur) == os.path.normpath(base_img_dir):
-            rel_parts.append(('img', base_img_dir))
-            break
-        rel_parts.append((os.path.basename(cur), cur))
-        cur = os.path.dirname(cur)
+      if os.path.normpath(cur) == os.path.normpath(base_img_dir):
+        rel_parts.append(('img', base_img_dir))
+        break
+      rel_parts.append((os.path.basename(cur), cur))
+      cur = os.path.dirname(cur)
     rel_parts = rel_parts[::-1]
     breadcrumb = []
     for name, abspath in rel_parts:
-        breadcrumb.append(f'<a href="#" class="breadcrumb" data-folder="{abspath}">{name}</a>')
+      breadcrumb.append(f'<a href="#" class="breadcrumb" data-folder="{abspath}">{name}</a>')
     rel_path = ' / '.join(breadcrumb)
 
-    # 產生 data-curr-dir 屬性的 span，直接用目前目錄 abspath
-    rel_path_html = f'<span class="path" data-curr-dir="{cur_dir}">{rel_path}</span>'
-
+    # 產生 rel_path_html 與 cur_dir 給模板
+    rel_path_html = rel_path
     # 讀取外部 HTML template
     template_path = Path(__file__).parent / 'static' / 'template.html'
     with open(template_path, encoding='utf-8') as f:
-        html_tpl = f.read()
-    html = html_tpl.replace('{{folder_tags}}', folder_tags).replace('{{img_tags}}', img_tags).replace('{{rel_path}}', rel_path_html)
+      html_tpl = f.read()
+    html = html_tpl.replace('{{folder_tags}}', folder_tags) \
+      .replace('{{img_tags}}', img_tags) \
+      .replace('{{rel_path}}', rel_path_html) \
+      .replace('{{cur_dir}}', cur_dir)
     # baseUrl 設為專案根目錄，確保 static/ 可正確載入
     project_root = Path(__file__).parent
     base_url = QUrl.fromLocalFile(str(project_root) + os.sep)
