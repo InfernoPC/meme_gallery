@@ -5,6 +5,13 @@
 
         // 建立資料夾功能
         const btnNewFolder = document.getElementById('btnNewFolder');
+        const btnReloadAll = document.getElementById('btnReloadAll');
+        if (btnReloadAll) {
+            btnReloadAll.addEventListener('click', function() {
+                // 取得 img 目錄絕對路徑（由 Python 端判斷）
+                bridge.openFolder('img');
+            });
+        }
         if (btnNewFolder) {
             btnNewFolder.addEventListener('click', function() {
                 let folderName = prompt('請輸入新資料夾名稱：');
