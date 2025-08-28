@@ -293,7 +293,7 @@ body::-webkit-scrollbar {
     left: 50%;
     transform: translateX(-50%);
     color: #b0c4de;
-    background: rgba(34, 51, 102, .7);
+    /* background: #223366b3; */
     padding: 8px 12px;
     border-radius: 8px;
     font: 14px/1.4 system-ui;
@@ -301,3 +301,7 @@ body::-webkit-scrollbar {
     transition: opacity .2s;
     z-index: 100;
 }
+
+/* 顏色對應 type */
+.hint-error   { background: #991724; }  /* 紅色 */
+.hint-info    { background: #223366b3; }  /* 藍色 */

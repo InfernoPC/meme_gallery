@@ -1,8 +1,20 @@
+window.showHint = function(msg, type='info', timeout=2000){
+    const hint = document.getElementById('hint');
+    if(!hint) return;
+    hint.textContent = msg;
+    // 移除舊的 type class
+    hint.classList.remove('hint-error', 'hint-info');
+
+    // 加上新的 type class
+    hint.classList.add(`hint-${type}`);
+    hint.style.opacity = 1;
+    setTimeout(()=>{ hint.style.opacity = 0; hint.className=''; }, timeout);
+};
+
 // 初始化 WebChannel
 new QWebChannel(qt.webChannelTransport, function (channel) {
     const bridge = channel.objects.bridge;
     const hint = document.getElementById('hint');
-
     // 建立資料夾功能
     const btnNewFolder = document.getElementById('btnNewFolder');
     const btnReloadAll = document.getElementById('btnReloadAll');
@@ -84,9 +96,7 @@ new QWebChannel(qt.webChannelTransport, function (channel) {
     document.querySelectorAll('.imgbox img').forEach(function (img) {
         img.addEventListener('click', function () {
             bridge.copyApngFile(img.getAttribute('data-path'));
-            hint.textContent = '已複製檔案到剪貼簿';
-            hint.style.opacity = 1;
-            setTimeout(() => hint.style.opacity = 0, 900);
+            showHint('已複製檔案到剪貼簿');
         });
         // 支援拖曳圖片
         img.setAttribute('draggable', 'true');

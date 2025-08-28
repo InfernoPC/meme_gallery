@@ -18,11 +18,11 @@ class Bridge(QObject):
     from io import BytesIO
     clipboard = QGuiApplication.clipboard()
     mime = clipboard.mimeData()
-    print("target folder = ", target_folder)
+    
     if mime.hasImage():
       qtimg = clipboard.image()
       if qtimg.isNull():
-        print('[Paste Image Error] 剪貼簿圖片為空')
+        self.showHint('[Paste Image Error] 剪貼簿圖片為空', 'error')
         return
       # 轉成 PIL Image
       buffer = BytesIO()
@@ -33,7 +33,7 @@ class Bridge(QObject):
       out_path = os.path.join(target_folder, fname)
       pil_img.save(out_path)
       self.reload_func(target_folder)
-      print(f'[Paste Image] 已儲存 {out_path}')
+      self.showHint(f'[Paste Image] 已儲存 {out_path}', 'info')
     elif mime.hasUrls():
       # 有些截圖工具會以檔案方式放剪貼簿
       for url in mime.urls():
@@ -47,11 +47,11 @@ class Bridge(QObject):
             with open(local_path, 'rb') as src, open(out_path, 'wb') as dst:
               dst.write(src.read())
             self.reload_func(target_folder)
-            print(f'[Paste Image] 已儲存 {out_path}')
+            self.showHint(f'[Paste Image] 已儲存 {out_path}', 'info')
             return
-      print('[Paste Image Error] 剪貼簿沒有圖片檔案')
+      self.showHint('[Paste Image Error] 剪貼簿沒有圖片檔案', 'error')
     else:
-      print('[Paste Image Error] 剪貼簿沒有圖片')
+      self.showHint('[Paste Image Error] 剪貼簿沒有圖片', 'error')
 
   @pyqtSlot(str, str)
   def saveClipboardImage(self, target_folder, base64data):
@@ -61,7 +61,7 @@ class Bridge(QObject):
     # base64data: data:image/png;base64,...
     m = re.match(r'data:(image/\w+);base64,(.+)', base64data)
     if not m:
-      print('[Paste Image Error] 格式錯誤')
+      self.showHint('[Paste Image Error] 格式錯誤', 'error')
       return
     mime, b64 = m.groups()
     ext = {
@@ -84,28 +84,28 @@ class Bridge(QObject):
         img = Image.open(BytesIO(imgdata))
         img.save(out_path)
       self.reload_func(target_folder)
-      print(f'[Paste Image] 已儲存 {out_path}')
+      self.showHint(f'[Paste Image] 已儲存 {out_path}', 'info')
     except Exception as e:
-      print(f'[Paste Image Error] {e}')
+      self.showHint(f'[Paste Image Error] {e}', 'error')
   @pyqtSlot(str, str)
   def moveFile(self, src_path, target_folder):
     import shutil, os
     src_path = os.path.abspath(src_path)
     target_folder = os.path.abspath(target_folder)
     if not os.path.isfile(src_path) or not os.path.isdir(target_folder):
-      print(f"[Move File Error] 檔案或目標資料夾不存在: {src_path} -> {target_folder}")
+      self.showHint(f"[Move File Error] 檔案或目標資料夾不存在: {src_path} -> {target_folder}", 'error')
       return
     fname = os.path.basename(src_path)
     dst_path = os.path.join(target_folder, fname)
     # 防呆：不可覆蓋
     if os.path.exists(dst_path):
-      print(f"[Move File Error] 目標已存在: {dst_path}")
+      self.showHint(f"[Move File Error] 目標已存在: {dst_path}", 'error')
       return
     try:
       shutil.move(src_path, dst_path)
       self.reload_func(os.path.dirname(src_path))
     except Exception as e:
-      print(f"[Move File Error] {e}")
+      self.showHint(f"[Move File Error] {e}", 'error')
 
   @pyqtSlot(str, str)
   def moveFolder(self, src_path, target_folder):
@@ -113,22 +113,22 @@ class Bridge(QObject):
     src_path = os.path.abspath(src_path)
     target_folder = os.path.abspath(target_folder)
     if not os.path.isdir(src_path) or not os.path.isdir(target_folder):
-      print(f"[Move Folder Error] 資料夾不存在: {src_path} -> {target_folder}")
+      self.showHint(f"[Move Folder Error] 資料夾不存在: {src_path} -> {target_folder}", 'error')
       return
     # 防止移動到自己或子資料夾
     if src_path == target_folder or target_folder.startswith(src_path + os.sep):
-      print(f"[Move Folder Error] 不能移動到自己或子資料夾")
+      self.showHint("[Move Folder Error] 不能移動到自己或子資料夾", 'error')
       return
     fname = os.path.basename(src_path)
     dst_path = os.path.join(target_folder, fname)
     if os.path.exists(dst_path):
-      print(f"[Move Folder Error] 目標已存在: {dst_path}")
+      self.showHint(f"[Move Folder Error] 目標已存在: {dst_path}", 'error')
       return
     try:
       shutil.move(src_path, dst_path)
       self.reload_func(os.path.dirname(src_path))
     except Exception as e:
-      print(f"[Move Folder Error] {e}")
+      self.showHint(f"[Move Folder Error] {e}", 'error')
   @pyqtSlot(str, str)
   def createFolder(self, cur_path, folder_name):
     import os
@@ -143,7 +143,7 @@ class Bridge(QObject):
       os.makedirs(new_folder)
       self.reload_func(abs_path)
     except Exception as e:
-      print(f"[Create Folder Error] {e}")
+      self.showHint(f"[Create Folder Error] {e}", 'error')
   @pyqtSlot(str)
   def deleteFolder(self, folder_path):
     import shutil
@@ -152,7 +152,7 @@ class Bridge(QObject):
       shutil.rmtree(folder_path)
       self.reload_func(os.path.dirname(folder_path))
     except Exception as e:
-      print(f"[Delete Folder Error] {e}")
+      self.showHint(f"[Delete Folder Error] {e}", 'error')
   @pyqtSlot(str)
   def deleteFile(self, file_path):
     import os
@@ -161,7 +161,7 @@ class Bridge(QObject):
       os.remove(file_path)
       self.reload_func(os.path.dirname(file_path))
     except Exception as e:
-      print(f"[Delete File Error] {e}")
+      self.showHint(f"[Delete File Error] {e}", 'error')
   @pyqtSlot(str, str)
   def renameFolder(self, old_path, new_name):
     import shutil
@@ -175,7 +175,7 @@ class Bridge(QObject):
       shutil.move(old_path, new_path)
       self.reload_func(os.path.dirname(new_path))
     except Exception as e:
-      print(f"[Rename Folder Error] {e}")
+      self.showHint(f"[Rename Folder Error] {e}", 'error')
   @pyqtSlot(str, str)
   def renameFile(self, old_path, new_name):
     import shutil
@@ -189,10 +189,30 @@ class Bridge(QObject):
       shutil.move(old_path, new_path)
       self.reload_func(os.path.dirname(new_path))
     except Exception as e:
-      print(f"[Rename Error] {e}")
-  def __init__(self, reload_func):
+      self.showHint(f"[Rename File Error] {e}", 'error')
+  def __init__(self, reload_func, view):
     super().__init__()
     self.reload_func = reload_func
+    self.view = view
+    # 確保前端載入完成再呼叫 showHint
+    self.view.page().loadFinished.connect(self._on_load_finished)
+    self._pending_hints = []
+    
+  def _on_load_finished(self, ok):
+    if ok:
+      for msg, hint_type, timeout in self._pending_hints:
+        js = f"showHint({msg!r}, {hint_type!r}, {timeout});"
+        self.view.page().runJavaScript(js)
+      self._pending_hints.clear()
+    
+  def showHint(self, msg, hint_type='info', timeout=2000):
+    if not self.view or not self.view.page():
+      return
+    if not self.view.page().url().isValid():  # 還沒載入完成
+      self._pending_hints.append((msg, hint_type, timeout))
+    else:
+      js = f"showHint({msg!r}, {hint_type!r}, {timeout});"
+      self.view.page().runJavaScript(js)
 
   @pyqtSlot(str)
   def copyApngFile(self, img_path):
@@ -311,7 +331,7 @@ def main():
     view.setHtml(html, baseUrl=base_url)
 
   channel = QWebChannel(view.page())
-  bridge = Bridge(reload_dir)
+  bridge = Bridge(reload_dir, view)
   channel.registerObject("bridge", bridge)
   view.page().setWebChannel(channel)
 
