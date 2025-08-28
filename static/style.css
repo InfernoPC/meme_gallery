@@ -1,3 +1,38 @@
+/* ===== Search Box ===== */
+#searchbox {
+    display: flex;
+    align-items: center;
+    background: rgba(255,255,255,0.18);
+    border-radius: 8px;
+    padding: 2px 8px 2px 4px;
+    box-shadow: 0 1px 6px #ffb6c133;
+    position: relative;
+    margin-left: auto;
+    margin-right: 18px;
+}
+#searchInput {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 16px;
+    color: #d0006f;
+    padding: 4px 0 4px 4px;
+    width: 140px;
+}
+#searchInput::placeholder {
+    color: #ffb6c1bb;
+}
+#clearSearch {
+    font-size: 18px;
+    color: #ffb6c1;
+    cursor: pointer;
+    margin-left: 4px;
+    user-select: none;
+    transition: color 0.15s;
+}
+#clearSearch:hover {
+    color: #ff1493;
+}
 /* ===== Context Menu ===== */
 .context-menu {
     position: fixed;
@@ -43,6 +78,7 @@ body {
     z-index: 20;
     display: flex;
     align-items: center;
+    gap: 0 12px;
 }
 #navbox button {
     margin: 0 16px;

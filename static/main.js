@@ -100,4 +100,36 @@ new QWebChannel(qt.webChannelTransport, function (channel) {
             bridge.openFolder(el.getAttribute('data-folder'));
         });
     });
+
+    // 搜尋功能
+    const searchInput = document.getElementById('searchInput');
+    const clearSearch = document.getElementById('clearSearch');
+    function filterImages() {
+        const val = searchInput.value.trim().toLowerCase();
+        document.querySelectorAll('.imgbox').forEach(function(box) {
+            const img = box.querySelector('img');
+            const name = img ? img.getAttribute('data-path').split(/[/\\]/).pop().toLowerCase() : '';
+            if (!val || name.includes(val)) {
+                box.style.display = '';
+            } else {
+                box.style.display = 'none';
+            }
+        });
+    }
+    if (searchInput) {
+        searchInput.addEventListener('input', filterImages);
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                searchInput.value = '';
+                filterImages();
+            }
+        });
+    }
+    if (clearSearch) {
+        clearSearch.addEventListener('click', function() {
+            searchInput.value = '';
+            filterImages();
+            searchInput.focus();
+        });
+    }
 });
