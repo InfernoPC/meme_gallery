@@ -9,6 +9,21 @@ import sys, os
 from pathlib import Path
 
 class Bridge(QObject):
+  @pyqtSlot(str, str)
+  def createFolder(self, cur_path, folder_name):
+    import os
+    # cur_path 可能為相對路徑
+    if not cur_path:
+      cur_path = os.path.join(os.path.dirname(__file__), 'img')
+    abs_path = os.path.abspath(cur_path)
+    new_folder = os.path.join(abs_path, folder_name)
+    if os.path.exists(new_folder):
+      return
+    try:
+      os.makedirs(new_folder)
+      self.reload_func(abs_path)
+    except Exception as e:
+      print(f"[Create Folder Error] {e}")
   @pyqtSlot(str)
   def deleteFolder(self, folder_path):
     import shutil
@@ -124,7 +139,6 @@ def main():
 
     # 產生可點擊 breadcrumb
     rel_parts = []
-    abs_parts = []
     cur = cur_dir
     while True:
         if os.path.normpath(cur) == os.path.normpath(base_img_dir):
@@ -138,11 +152,14 @@ def main():
         breadcrumb.append(f'<a href="#" class="breadcrumb" data-folder="{abspath}">{name}</a>')
     rel_path = ' / '.join(breadcrumb)
 
+    # 產生 data-curr-dir 屬性的 span，直接用目前目錄 abspath
+    rel_path_html = f'<span class="path" data-curr-dir="{cur_dir}">{rel_path}</span>'
+
     # 讀取外部 HTML template
     template_path = Path(__file__).parent / 'static' / 'template.html'
     with open(template_path, encoding='utf-8') as f:
         html_tpl = f.read()
-    html = html_tpl.replace('{{folder_tags}}', folder_tags).replace('{{img_tags}}', img_tags).replace('{{rel_path}}', rel_path)
+    html = html_tpl.replace('{{folder_tags}}', folder_tags).replace('{{img_tags}}', img_tags).replace('{{rel_path}}', rel_path_html)
     # baseUrl 設為專案根目錄，確保 static/ 可正確載入
     project_root = Path(__file__).parent
     base_url = QUrl.fromLocalFile(str(project_root) + os.sep)

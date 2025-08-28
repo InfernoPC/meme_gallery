@@ -1,7 +1,31 @@
-// 初始化 WebChannel
-new QWebChannel(qt.webChannelTransport, function (channel) {
-    const bridge = channel.objects.bridge;
-    const hint = document.getElementById('hint');
+    // 初始化 WebChannel
+    new QWebChannel(qt.webChannelTransport, function (channel) {
+        const bridge = channel.objects.bridge;
+        const hint = document.getElementById('hint');
+
+        // 建立資料夾功能
+        const btnNewFolder = document.getElementById('btnNewFolder');
+        if (btnNewFolder) {
+            btnNewFolder.addEventListener('click', function() {
+                let folderName = prompt('請輸入新資料夾名稱：');
+                if (!folderName) return;
+                folderName = folderName.trim();
+                // 禁止非法字元: \/:*?"<>|
+                if (!folderName || /[\\/:*?"<>|]/.test(folderName)) {
+                    alert('資料夾名稱不能包含以下字元：\\ / : * ? " < > |，且不能為空白');
+                    return;
+                }
+                // 取得目前資料夾路徑，並去除每個路徑段的空白
+                let curPath = '';
+                const pathSpan = document.querySelector('.path');
+                if (pathSpan) {
+                    curPath = pathSpan.textContent || '';
+                    // 將每個路徑段 trim
+                    curPath = curPath.split(/[/\\]/).map(s => s.trim()).filter(Boolean).join('\\');
+                }
+                bridge.createFolder(curPath, folderName);
+            });
+        }
     // 建立右鍵選單
     function createContextMenu(items, x, y) {
         let menu = document.createElement('div');

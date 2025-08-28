@@ -71,7 +71,7 @@ body {
 /* ===== Navigation Bar ===== */
 #navbox {
     position: fixed;
-    top: 0; left: 0; width: 100vw;
+    top: 44px; left: 0; width: 100vw;
     background: #222;
     color: #fff;
     padding: 10px 0 6px 0;
@@ -79,6 +79,37 @@ body {
     display: flex;
     align-items: center;
     gap: 0 12px;
+}
+/* ===== Toolbar ===== */
+#toolbar {
+    width: 100vw;
+    background: rgba(255,255,255,0.10);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0 4px 18px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 30;
+    box-shadow: 0 2px 8px #ffb6c122;
+}
+#toolbar button {
+    background: linear-gradient(90deg, #ffb6c1cc 0%, #fff0fa 100%);
+    color: #d0006f;
+    border: none;
+    border-radius: 7px;
+    font-size: 15px;
+    padding: 6px 18px;
+    margin-right: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 1px 4px #ffb6c133;
+    transition: background 0.15s, color 0.15s;
+}
+#toolbar button:hover {
+    background: #fff0fa;
+    color: #ff1493;
 }
 #navbox button {
     margin: 0 16px;
