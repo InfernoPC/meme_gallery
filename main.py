@@ -180,7 +180,7 @@ def main():
       ext = os.path.splitext(fname)[1].lower()
       # 針對 gif/apng 加上 loop 屬性（雖然大多數瀏覽器會自動循環）
       loop_attr = ' loop' if ext in ['.gif', '.apng'] else ''
-      img_tags += f'<div class="imgbox"><img src="{furl}" data-path="{fpath}" alt="{fname}"{loop_attr}/><div class="imgname">{fname}</div></div>'
+      img_tags += f'<div class="imgbox"><img src="{furl}" data-path="{fpath}" alt="{fname}"{loop_attr} /><div class="imgname">{fname}</div></div>'
 
 
     # 產生可點擊 breadcrumb
