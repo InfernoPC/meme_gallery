@@ -23,10 +23,6 @@ class Bridge(QObject):
   def openFolder(self, folder_path):
     self.reload_func(folder_path)
 
-  @pyqtSlot()
-  def goBack(self):
-    self.reload_func('..')
-
 def main():
   app = QApplication(sys.argv)
 
@@ -79,11 +75,22 @@ def main():
       loop_attr = ' loop' if ext in ['.gif', '.apng'] else ''
       img_tags += f'<div class="imgbox"><img src="{furl}" data-path="{fpath}" alt="{fname}"{loop_attr}/><div class="imgname">{fname}</div></div>'
 
-    rel_path = os.path.relpath(cur_dir, base_img_dir)
-    if rel_path == '.':
-      rel_path = 'img/'
-    else:
-      rel_path = 'img/' + rel_path.replace('\\', '/') + '/'
+
+    # 產生可點擊 breadcrumb
+    rel_parts = []
+    abs_parts = []
+    cur = cur_dir
+    while True:
+        if os.path.normpath(cur) == os.path.normpath(base_img_dir):
+            rel_parts.append(('img', base_img_dir))
+            break
+        rel_parts.append((os.path.basename(cur), cur))
+        cur = os.path.dirname(cur)
+    rel_parts = rel_parts[::-1]
+    breadcrumb = []
+    for name, abspath in rel_parts:
+        breadcrumb.append(f'<a href="#" class="breadcrumb" data-folder="{abspath}">{name}</a>')
+    rel_path = ' / '.join(breadcrumb)
 
     # 讀取外部 HTML template
     template_path = Path(__file__).parent / 'static' / 'template.html'

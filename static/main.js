@@ -16,7 +16,11 @@ new QWebChannel(qt.webChannelTransport, function (channel) {
             bridge.openFolder(box.getAttribute('data-folder'));
         });
     });
-    document.getElementById('backbtn').addEventListener('click', function () {
-        bridge.goBack();
+    // 點擊 breadcrumb 跳資料夾
+    document.querySelectorAll('.breadcrumb').forEach(function (el) {
+        el.addEventListener('click', function (e) {
+            e.preventDefault();
+            bridge.openFolder(el.getAttribute('data-folder'));
+        });
     });
 });

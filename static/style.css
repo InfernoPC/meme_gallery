@@ -30,6 +30,21 @@ body {
     opacity: .7;
     user-select: all;
 }
+.breadcrumb {
+    color: #ffb84d;
+    text-decoration: underline;
+    cursor: pointer;
+    margin: 0 8px;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    transition: color .15s;
+}
+.breadcrumb:hover {
+    color: #fffbe0;
+    text-shadow: 0 2px 8px #ffb84d44;
+    text-decoration: underline;
+}
 
 /* ===== Main Content ===== */
 #wrap {
