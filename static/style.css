@@ -1,0 +1,115 @@
+
+/* ===== Reset & Layout ===== */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    background: #111;
+}
+
+/* ===== Navigation Bar ===== */
+#navbox {
+    position: fixed;
+    top: 0; left: 0; width: 100vw;
+    background: #222;
+    color: #fff;
+    padding: 10px 0 6px 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+}
+#navbox button {
+    margin: 0 16px;
+    padding: 4px 12px;
+    font-size: 15px;
+}
+#navbox .path {
+    font-size: 13px;
+    opacity: .7;
+    user-select: all;
+}
+
+/* ===== Main Content ===== */
+#wrap {
+    /* min-height: 100vh; */
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    /* justify-content: center; */
+    padding-top: 60px;
+}
+
+/* ===== Card (Folder & Image) ===== */
+.folderbox, .imgbox {
+    margin: 12px;
+    background: #222;
+    padding: 8px 8px 0 8px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px #0004;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 200px;
+    min-height: 200px;
+    box-sizing: border-box;
+
+}
+.folderbox { cursor: pointer; }
+
+/* ===== Folder Icon & Name ===== */
+.foldericon {
+    font-size: 120px;
+    /* width: 300px;
+    height: 200px; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.foldername {
+    color: #ffb84d;
+    font-size: 16px;
+    margin-bottom: 8px;
+    word-break: break-all;
+    max-width: 300px;
+    text-align: center;
+}
+
+/* ===== Image Card ===== */
+.imgbox img {
+    max-width: 300px;
+    max-height: 200px;
+    cursor: pointer;
+    display: block;
+    align-self: center;
+}
+.imgbox .imgname {
+    color: #fff;
+    font-size: 16px;
+    margin: 16px 0 8px 0;
+    word-break: break-all;
+    max-width: 300px;
+    text-align: center;
+}
+/* 動圖自動循環（瀏覽器自動循環，這裡僅保留標註） */
+.imgbox img[alt$='.gif'],
+.imgbox img[alt$='.apng'] {
+    animation: none;
+}
+
+/* ===== Hint Toast ===== */
+#hint {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    background: rgba(0,0,0,.6);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font: 14px/1.4 system-ui;
+    opacity: 0;
+    transition: opacity .2s;
+    z-index: 100;
+}

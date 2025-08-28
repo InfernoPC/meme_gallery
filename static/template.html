@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>APNG WebView</title>
+    <link rel="stylesheet" href="static/style.css">
+    <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+</head>
+
+<body>
+    <div id="navbox">
+        <button id="backbtn">⬅ 上一層</button>
+        <span class="path">{{rel_path}}</span>
+    </div>
+    <div id="wrap">
+        {{folder_tags}}
+        {{img_tags}}
+    </div>
+    <div id="hint">已複製檔案到剪貼簿</div>
+    <script src="static/main.js"></script>
+</body>
+
+</html>

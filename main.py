@@ -6,68 +6,7 @@ from PyQt6.QtCore import QMimeData
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWebChannel import QWebChannel
 import sys, os
-
-HTML_TMPL = """
-<!doctype html>
-<html>
-<head>
-<meta charset=\"utf-8\" />
-<title>APNG WebView</title>
-<style>
-  html,body{{height:100%;margin:0}}
-  #navbox{{position:fixed;top:0;left:0;width:100vw;background:#222;color:#fff;padding:10px 0 6px 0;z-index:20;display:flex;align-items:center;}}
-  #navbox button{{margin-left:16px;margin-right:16px;padding:4px 12px;font-size:15px;}}
-  #navbox .path{{font-size:13px;opacity:.7;user-select:all;}}
-  #wrap{{min-height:100vh;display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:center;background:#111;padding-top:60px;}}
-  .folderbox,.imgbox{{margin:12px;background:#222;padding:8px 8px 0 8px;border-radius:10px;box-shadow:0 2px 8px #0004;display:flex;flex-direction:column;align-items:center;width:336px;min-height:304px;box-sizing:border-box;}}
-  .folderbox{{cursor:pointer;}}
-  .foldericon{{font-size:120px;width:320px;height:240px;display:flex;align-items:center;justify-content:center;}}
-  .foldername{{color:#ffb84d;font-size:16px;margin-bottom:8px;word-break:break-all;max-width:320px;text-align:center;}}
-  .imgbox img{{max-width:320px;max-height:240px;cursor:pointer;display:block;}}
-  /* 針對 gif/apng 動圖加上動畫效果（瀏覽器自動循環） */
-  .imgbox img[alt$='.gif'], .imgbox img[alt$='.apng']{{animation: none;}}
-  .imgbox .imgname{{color:#fff;font-size:16px;margin:16px 0 8px 0;word-break:break-all;max-width:320px;text-align:center;}}
-  #hint{{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);color:#fff;background:rgba(0,0,0,.6);padding:8px 12px;border-radius:8px;font:14px/1.4 system-ui;opacity:0;transition:opacity .2s;z-index:100;}}
-</style>
-<script src=\"qrc:///qtwebchannel/qwebchannel.js\"></script>
-</head>
-<body>
-<div id=\"navbox\">
-  <button id=\"backbtn\">⬅ 上一層</button>
-  <span class=\"path\">{rel_path}</span>
-</div>
-<div id=\"wrap\">
-  {folder_tags}
-  {img_tags}
-</div>
-<div id=\"hint\">已複製檔案到剪貼簿</div>
-<script>
-  // 初始化 WebChannel
-  new QWebChannel(qt.webChannelTransport, function(channel){{
-    const bridge = channel.objects.bridge;
-    const hint = document.getElementById('hint');
-    document.querySelectorAll('.imgbox img').forEach(function(img){{
-      img.addEventListener('click', function(){{
-        bridge.copyApngFile(img.getAttribute('data-path'));
-        hint.textContent = '已複製檔案到剪貼簿';
-        hint.style.opacity = 1;
-        setTimeout(()=> hint.style.opacity = 0, 900);
-      }});
-      img.addEventListener('dragstart', e => e.preventDefault());
-    }});
-    document.querySelectorAll('.folderbox').forEach(function(box){{
-      box.addEventListener('click', function(){{
-        bridge.openFolder(box.getAttribute('data-folder'));
-      }});
-    }});
-    document.getElementById('backbtn').addEventListener('click', function(){{
-      bridge.goBack();
-    }});
-  }});
-</script>
-</body>
-</html>
-"""
+from pathlib import Path
 
 class Bridge(QObject):
   def __init__(self, reload_func):
@@ -146,9 +85,15 @@ def main():
     else:
       rel_path = 'img/' + rel_path.replace('\\', '/') + '/'
 
-    dir_url = QUrl.fromLocalFile(cur_dir + os.sep)
-    html = HTML_TMPL.format(folder_tags=folder_tags, img_tags=img_tags, rel_path=rel_path)
-    view.setHtml(html, baseUrl=dir_url)
+    # 讀取外部 HTML template
+    template_path = Path(__file__).parent / 'static' / 'template.html'
+    with open(template_path, encoding='utf-8') as f:
+        html_tpl = f.read()
+    html = html_tpl.replace('{{folder_tags}}', folder_tags).replace('{{img_tags}}', img_tags).replace('{{rel_path}}', rel_path)
+    # baseUrl 設為專案根目錄，確保 static/ 可正確載入
+    project_root = Path(__file__).parent
+    base_url = QUrl.fromLocalFile(str(project_root) + os.sep)
+    view.setHtml(html, baseUrl=base_url)
 
   channel = QWebChannel(view.page())
   bridge = Bridge(reload_dir)
