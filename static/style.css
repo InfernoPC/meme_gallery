@@ -1,28 +1,9 @@
-/* ===== Custom Scrollbar for #wrap ===== */
-#wrap {
-    scrollbar-width: thin;
-    scrollbar-color: #223366 #232a36;
-}
-#wrap::-webkit-scrollbar {
-    width: 10px;
-    background: #232a36;
-}
-#wrap::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, #223366 60%, #2a3140 100%);
-    border-radius: 8px;
-    border: 2px solid #232a36;
-}
-#wrap::-webkit-scrollbar-thumb:hover {
-    background: #2a3140;
-}
-#wrap::-webkit-scrollbar-corner {
-    background: #232a36;
-}
+
 /* ===== Search Box ===== */
 #searchbox {
     display: flex;
     align-items: center;
-    background: rgba(30,34,48,0.85);
+    background: rgba(30, 34, 48, 0.85);
     border-radius: 8px;
     padding: 2px 8px 2px 4px;
     box-shadow: 0 1px 6px #22336655;
@@ -30,6 +11,7 @@
     margin-left: auto;
     margin-right: 18px;
 }
+
 #searchInput {
     border: none;
     background: transparent;
@@ -39,9 +21,11 @@
     padding: 4px 0 4px 4px;
     width: 140px;
 }
+
 #searchInput::placeholder {
     color: #7a869a;
 }
+
 #clearSearch {
     font-size: 18px;
     color: #4a5a7a;
@@ -50,14 +34,16 @@
     user-select: none;
     transition: color 0.15s;
 }
+
 #clearSearch:hover {
     color: #b0c4de;
 }
+
 /* ===== Context Menu ===== */
 .context-menu {
     position: fixed;
     z-index: 9999;
-    background: rgba(40,48,64,0.98);
+    background: rgba(40, 48, 64, 0.98);
     border-radius: 10px;
     box-shadow: 0 2px 16px #22336688;
     min-width: 120px;
@@ -67,37 +53,46 @@
     border: 1.5px solid #2a3140;
     backdrop-filter: blur(2px);
 }
+
 .context-menu-item {
     padding: 8px 20px;
     cursor: pointer;
     transition: background 0.15s, color 0.15s;
     border-radius: 6px;
 }
+
 .context-menu-item:hover {
     background: #2a3140;
     color: #b0c4de;
 }
 
 /* ===== Reset & Layout ===== */
-html, body {
+html,
+body {
     height: 100%;
     margin: 0;
     /* overflow: hidden; */
-    scrollbar-width: none;       /* Firefox 用，隱藏滾動條 */
-    -ms-overflow-style: none;    /* IE/Edge 舊版 */
+    scrollbar-width: none;
+    /* Firefox 用，隱藏滾動條 */
+    -ms-overflow-style: none;
+    /* IE/Edge 舊版 */
 }
 
 body {
     background: #232a36;
 }
+
 body::-webkit-scrollbar {
-    display: none;               /* Chrome/Safari/Edge (Chromium) */
+    display: none;
+    /* Chrome/Safari/Edge (Chromium) */
 }
 
 /* ===== Navigation Bar ===== */
 #navbox {
     position: fixed;
-    top: 40px; left: 0; width: 100vw;
+    top: 40px;
+    left: 0;
+    width: 100vw;
     background: #384155;
     color: #b0c4de;
     padding: 10px 0 6px 0;
@@ -106,6 +101,7 @@ body::-webkit-scrollbar {
     align-items: center;
     gap: 0 12px;
 }
+
 /* ===== Toolbar ===== */
 #toolbar {
     height: 40px;
@@ -122,6 +118,7 @@ body::-webkit-scrollbar {
     z-index: 30;
     box-shadow: 0 2px 8px #ffb6c122;
 }
+
 #toolbar button {
     background: linear-gradient(90deg, #223366cc 0%, #232a36 100%);
     color: #b0c4de;
@@ -135,20 +132,24 @@ body::-webkit-scrollbar {
     box-shadow: 0 0.8px 3.2px #22336655;
     transition: background 0.12s, color 0.12s;
 }
+
 #toolbar button:hover {
     background: #2a3140;
     color: #b0c4de;
 }
+
 #navbox button {
     margin: 0 16px;
     padding: 4px 12px;
     font-size: 15px;
 }
+
 #navbox .path {
     font-size: 13px;
     opacity: .7;
     user-select: all;
 }
+
 .breadcrumb {
     color: #b0c4de;
     text-decoration: underline;
@@ -159,6 +160,7 @@ body::-webkit-scrollbar {
     letter-spacing: 1px;
     transition: color .15s;
 }
+
 .breadcrumb:hover {
     color: #b0c4de;
     text-shadow: 0 2px 8px #22336644;
@@ -176,15 +178,20 @@ body::-webkit-scrollbar {
     padding-top: 100px;
     overflow: auto;
     /* 隱藏 scrollbar 但保留滾動功能 */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE 10+ */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE 10+ */
 }
+
 #wrap::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+    display: none;
+    /* Chrome, Safari, Opera */
 }
 
 /* ===== Card (Folder & Image) ===== */
-.folderbox, .imgbox {
+.folderbox,
+.imgbox {
     margin: 8px;
     background: #384155;
     padding: 6.4px 6.4px 0 6.4px;
@@ -200,14 +207,41 @@ body::-webkit-scrollbar {
     box-sizing: border-box;
 
 }
-.folderbox { cursor: pointer; }
+
+.folderbox {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.folderthumb {
+    max-width: 64px;
+    max-height: 64px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+}
 
 /* ===== Folder Icon & Name ===== */
 .foldericon {
-    font-size: 96px;
+    font-size: 96px;             /* 📁 icon 大小 */
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+.foldericon .folderthumb {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+}
+.folderthumb{
+    margin-top: 40px;
 }
 .foldername {
     color: #b0c4de;
@@ -230,6 +264,7 @@ body::-webkit-scrollbar {
     display: block;
     align-self: center;
 }
+
 .imgbox .imgname {
     color: #b0c4de;
     font-size: 12.8px;
@@ -244,6 +279,7 @@ body::-webkit-scrollbar {
     right: 5%;
     bottom: 0;
 }
+
 /* 動圖自動循環（瀏覽器自動循環，這裡僅保留標註） */
 .imgbox img[alt$='.gif'],
 .imgbox img[alt$='.apng'] {
@@ -257,7 +293,7 @@ body::-webkit-scrollbar {
     left: 50%;
     transform: translateX(-50%);
     color: #b0c4de;
-    background: rgba(34,51,102,.7);
+    background: rgba(34, 51, 102, .7);
     padding: 8px 12px;
     border-radius: 8px;
     font: 14px/1.4 system-ui;

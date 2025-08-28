@@ -171,7 +171,26 @@ def main():
       folder_tags += f'<div class="folderbox" data-folder="{parent_path}" data-up="1"><div class="foldericon">⬆️</div><div class="foldername">..</div></div>'
     for folder in folders:
       folder_path = os.path.abspath(os.path.join(cur_dir, folder))
-      folder_tags += f'<div class="folderbox" data-folder="{folder_path}"><div class="foldericon">📁</div><div class="foldername">{folder}</div></div>'
+      
+      try:
+        sub_items = os.listdir(folder_path)
+      except Exception:
+        sub_items = []
+      sub_imgs = [f for f in sub_items if f.lower().endswith(exts)]
+      
+      if sub_imgs:
+        first_img = os.path.join(folder_path, sub_imgs[0])
+        first_img_url = QUrl.fromLocalFile(first_img).toString()
+        folder_icon_html = f'''
+          <div class="foldericon">
+            📁
+            <img src="{first_img_url}" class="folderthumb" />
+          </div>
+        '''
+      else:
+        folder_icon_html = '<div class="foldericon">📁</div>'
+
+      folder_tags += f'<div class="folderbox" data-folder="{folder_path}">{folder_icon_html}<div class="foldername">{folder}</div></div>'
 
     img_tags = ''
     for fname in img_files:
