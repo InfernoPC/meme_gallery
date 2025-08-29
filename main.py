@@ -6,7 +6,10 @@ from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWebChannel import QWebChannel
 import sys, os
 from pathlib import Path
+sys.path.append(os.path.dirname(__file__))
+
 from util.stickerdownloader import StickerDownloader
+
 
 class Bridge(QObject):
   
