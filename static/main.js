@@ -1,15 +1,32 @@
-window.showHint = function(msg, type='info', timeout=2000){
+// 全域 timer
+let hintTimer = null;
+
+window.showHint = function(msg, type='info', timeout=2000) {
     const hint = document.getElementById('hint');
-    if(!hint) return;
+    if (!hint) return;
+
     hint.textContent = msg;
+
     // 移除舊的 type class
     hint.classList.remove('hint-error', 'hint-info');
 
     // 加上新的 type class
     hint.classList.add(`hint-${type}`);
+
+    // 立即顯示
     hint.style.opacity = 1;
-    setTimeout(()=>{ hint.style.opacity = 0; hint.className=''; }, timeout);
+
+    // 如果前一次定時還沒結束，先清掉
+    if (hintTimer) clearTimeout(hintTimer);
+
+    // 設定新的消失計時
+    hintTimer = setTimeout(() => {
+        hint.style.opacity = 0;
+        hint.className = '';
+        hintTimer = null;
+    }, timeout);
 };
+
 
 // 初始化 WebChannel
 new QWebChannel(qt.webChannelTransport, function (channel) {
@@ -43,6 +60,16 @@ new QWebChannel(qt.webChannelTransport, function (channel) {
                 curPath = curPath.split(/[/\\]/).map(s => s.trim()).filter(Boolean).join('\\');
             }
             bridge.createFolder(curPath, folderName);
+        });
+    }
+    // 下載 Line 貼圖功能
+    const btnDownloadLineSticker = document.getElementById('btnDownloadLineSticker');
+    if (btnDownloadLineSticker) {
+        btnDownloadLineSticker.addEventListener('click', function () {
+            const url = prompt('請輸入 Line 貼圖網址：\n例如 https://store.line.me/stickershop/product/18301599/zh-Hant');
+            if (!url) return;
+            const curDir = getCurrentDir();
+            bridge.downloadLineSticker(url, curDir);
         });
     }
     // 貼上圖片功能（由 PyQt 端處理剪貼簿）

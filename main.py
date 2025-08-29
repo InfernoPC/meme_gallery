@@ -1,14 +1,35 @@
 # pip install PyQt6 PyQt6-WebEngine
 from PyQt6.QtWidgets import QApplication
-from PyQt6.QtCore import QObject, pyqtSlot, QUrl
+from PyQt6.QtCore import QObject, pyqtSlot, QUrl, QMimeData, QThread
 from PyQt6.QtGui import QGuiApplication
-from PyQt6.QtCore import QMimeData
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWebChannel import QWebChannel
 import sys, os
 from pathlib import Path
+from util.stickerdownloader import StickerDownloader
 
 class Bridge(QObject):
+  
+  @pyqtSlot(str, str)
+  def downloadLineSticker(self, url, target_folder):
+    self.thread = QThread()
+    self.worker = StickerDownloader(url, target_folder)
+    self.worker.moveToThread(self.thread)
+
+    # 連接訊號
+    self.thread.started.connect(self.worker.run)
+    self.worker.progress.connect(self.showHint)
+    self.worker.finished.connect(self._on_download_finished)
+
+    # 清理
+    self.worker.finished.connect(self.thread.quit)
+    self.worker.finished.connect(self.worker.deleteLater)
+    self.thread.finished.connect(self.thread.deleteLater)
+
+    self.thread.start()
+
+  def _on_download_finished(self, save_dir):
+    self.reload_func(save_dir)
 
   @pyqtSlot(str)
   def pasteImageFromClipboard(self, target_folder):
