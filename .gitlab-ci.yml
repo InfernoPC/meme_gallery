@@ -36,11 +36,15 @@ build_release:
     # 解壓 embed python 進資料夾
     - unzip $EMBED_PYTHON_ZIP -d $PROJECT_NAME/$EMBED_PYTHON_NAME
 
-    # 確保 embed python 的 Lib 資料夾存在
+    # 確保 embed python 的 Lib/site-packages 資料夾存在
     - mkdir -p $PROJECT_NAME/$EMBED_PYTHON_NAME/Lib/
+    - mkdir -p $PROJECT_NAME/$EMBED_PYTHON_NAME/Lib/site-packages/
 
-    # 拷貝 temp_env/Lib/* 到 embed python 的 Lib/
-    - cp -r temp_env/Lib/* $PROJECT_NAME/$EMBED_PYTHON_NAME/Lib/
+    # 列印 temp_env/lib 目錄內容以 debug
+    - ls -l temp_env/lib
+    
+    # 拷貝 site-packages 到 embed python 的 Lib/
+    - cp -r temp_env/lib/python*/site-packages/* $PROJECT_NAME/$EMBED_PYTHON_NAME/Lib/site-packages/
 
     # 修改 python313._pth 啟用 import site
     - sed -i 's/^#import site/import site/' $PROJECT_NAME/$EMBED_PYTHON_NAME/python*._pth
