@@ -58,7 +58,7 @@ build_release:
       EOF
 
     # 拷貝專案內容到 meme_gallery/
-    - rsync -a ./ $PROJECT_NAME/
+    - cp -r . $PROJECT_NAME/
 
     # 打包成 release-<tag>.zip
     - zip -r release-${CI_COMMIT_TAG}.zip $PROJECT_NAME
