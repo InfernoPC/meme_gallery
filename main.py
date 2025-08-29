@@ -1,7 +1,7 @@
 # pip install PyQt6 PyQt6-WebEngine
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtCore import QObject, pyqtSlot, QUrl, QMimeData, QThread
-from PyQt6.QtGui import QGuiApplication
+from PyQt6.QtGui import QGuiApplication, QIcon
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWebChannel import QWebChannel
 import sys, os
@@ -260,6 +260,9 @@ def main():
     cur_dir = base_img_dir
 
   view = QWebEngineView()
+  view.setWindowTitle("Meme Gallery")
+  view.setWindowIcon(QIcon('favicon.ico'))
+      
 
   def reload_dir(target_dir):
     nonlocal cur_dir
