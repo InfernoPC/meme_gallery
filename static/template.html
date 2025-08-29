@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>APNG WebView</title>
+    <link rel="stylesheet" href="static/style.css">
+    <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+</head>
+
+<body>
+    <div id="toolbar">
+        <button id="btnNewFolder">建立資料夾</button>
+        <button id="btnReloadAll">重新載入全部</button>
+        <button id="btnPasteImage">貼上圖片</button>
+        <button id="btnDownloadLineSticker">下載 Line 貼圖</button>
+        <!-- 可擴充更多按鈕 -->
+    </div>
+    <div id="navbox">
+        <span class="path" data-curr-dir="{{cur_dir}}">{{rel_path}}</span>
+        <div id="searchbox">
+            <input id="searchInput" type="text" placeholder="搜尋圖片..." autocomplete="off" />
+            <span id="clearSearch" title="清空">&#10006;</span>
+        </div>
+    </div>
+    <div id="wrap">
+        {{folder_tags}}
+        {{img_tags}}
+    </div>
+    <div id="hint"></div>
+    <script src="static/main.js"></script>
+</body>
+
+</html>
