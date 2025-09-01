@@ -1,6 +1,7 @@
 # stickerdownloader.py
 from PyQt6.QtCore import QObject, QThread, pyqtSignal
 import os, re, requests
+import json
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 
@@ -34,20 +35,23 @@ class StickerDownloader(QObject):
 
       # ====== 抓圖片 ======
       img_urls = set()
-      for img in soup.select('span.mdCMN09Image img, .FnStickerPreviewItem img'):
-        src = img.get('src')
-        if isinstance(src, str) and 'stickershop.line-scdn.net/stickershop/v1/sticker/' in src:
-          img_urls.add(src.split(';')[0])
 
-      for span in soup.select('span.mdCMN09Image'):
-        style = span.get('style') or ''
-        m = re.search(r'url\((https://stickershop\.line-scdn\.net/stickershop/v1/sticker/[^\)]+)\)', style)
-        if m:
-          img_urls.add(m.group(1).split(';')[0])
+      # 先抓動畫貼圖，沒有再抓靜態貼圖
+      for li in soup.select('li.FnStickerPreviewItem'):
+        data = li.get('data-preview')
+        if not data:
+          continue
+        try:
+          info = json.loads(data)
+          url = info.get('animationUrl') or info.get('staticUrl')
+          if url:
+            img_urls.add(url.split(';')[0])
+        except Exception:
+          continue
 
       if not img_urls:
-        self.progress.emit('[Line 貼圖] 找不到貼圖圖片', 'error', 2000)
-        return
+          self.progress.emit('[Line 貼圖] 找不到貼圖圖片', 'error', 2000)
+          return
 
       # ====== 下載 ======
       total = len(img_urls)
