@@ -1,7 +1,7 @@
 // 全域 timer
 let hintTimer = null;
 
-window.showHint = function(msg, type='info', timeout=2000) {
+window.showHint = function (msg, type = 'info', timeout = 2000) {
     const hint = document.getElementById('hint');
     if (!hint) return;
 
@@ -96,6 +96,8 @@ new QWebChannel(qt.webChannelTransport, function (channel) {
 
     // 建立右鍵選單
     function createContextMenu(items, x, y) {
+        // 先移除現有 context-menu
+        document.querySelectorAll('.context-menu').forEach(menu => menu.remove());
         let menu = document.createElement('div');
         menu.className = 'context-menu';
         items.forEach(item => {
@@ -255,4 +257,5 @@ new QWebChannel(qt.webChannelTransport, function (channel) {
             searchInput.focus();
         });
     }
+
 });
