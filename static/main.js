@@ -27,7 +27,6 @@ window.showHint = function (msg, type = 'info', timeout = 2000) {
     }, timeout);
 };
 
-
 // 初始化 WebChannel
 new QWebChannel(qt.webChannelTransport, function (channel) {
     const bridge = channel.objects.bridge;
@@ -258,4 +257,38 @@ new QWebChannel(qt.webChannelTransport, function (channel) {
         });
     }
 
+    // 設定視窗
+    const modal = document.getElementById("settingsModal");
+    const btnSettings = document.getElementById("btnSettings");
+    const closeBtn = document.getElementById("closeSettings");
+
+    // 打開設定視窗
+    btnSettings.addEventListener("click", () => {
+        modal.style.display = "block";
+    });
+
+    // 關閉設定視窗
+    closeBtn.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    // 點背景也能關閉
+    window.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+
+
+    const themeSelect = document.getElementById("themeSelect");
+    themeSelect.addEventListener("change", (e) => {
+        const themeName = e.target.value;
+
+        document.body.className = ""; // 清掉舊 class
+        if (themeName) {
+            document.body.classList.add(themeName);
+        }
+        bridge.saveConfig("theme", themeName);
+
+    });
 });

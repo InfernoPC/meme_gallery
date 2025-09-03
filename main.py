@@ -9,7 +9,9 @@ from pathlib import Path
 sys.path.append(os.path.dirname(__file__))
 
 from util.stickerdownloader import StickerDownloader
+import json
 
+CONFIG_FILE = "config.json"
 
 class Bridge(QObject):
   
@@ -189,7 +191,6 @@ class Bridge(QObject):
   @pyqtSlot(str, str)
   def renameFolder(self, old_path, new_name):
     import shutil
-    import pathlib
     old_path = os.path.abspath(old_path)
     new_path = os.path.join(os.path.dirname(old_path), new_name)
     # 防呆：不可覆蓋已存在資料夾
@@ -203,7 +204,6 @@ class Bridge(QObject):
   @pyqtSlot(str, str)
   def renameFile(self, old_path, new_name):
     import shutil
-    import pathlib
     old_path = os.path.abspath(old_path)
     new_path = os.path.join(os.path.dirname(old_path), new_name)
     # 防呆：不可覆蓋已存在檔案
@@ -214,6 +214,17 @@ class Bridge(QObject):
       self.reload_func(os.path.dirname(new_path))
     except Exception as e:
       self.showHint(f"[Rename File Error] {e}", 'error')
+      
+  @pyqtSlot(str, str)
+  def saveConfig(self, key, value):
+    self.config[key] = value
+    with open(CONFIG_FILE, "w", encoding="utf-8") as f:
+      json.dump(self.config, f, ensure_ascii=False, indent=2)
+      
+  @pyqtSlot(str, result=str)
+  def loadConfig(self, key):
+    return self.config.get(key, "")
+    
   def __init__(self, reload_func, view):
     super().__init__()
     self.reload_func = reload_func
@@ -221,6 +232,12 @@ class Bridge(QObject):
     # 確保前端載入完成再呼叫 showHint
     self.view.page().loadFinished.connect(self._on_load_finished)
     self._pending_hints = []
+    
+    if os.path.exists(CONFIG_FILE):
+        with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+            self.config = json.load(f)
+    else:
+        self.config = {}
     
   def _on_load_finished(self, ok):
     if ok:
@@ -342,6 +359,8 @@ def main():
       breadcrumb.append(f'<a href="#" class="breadcrumb" data-folder="{abspath}">{name}</a>')
     rel_path = ' / '.join(breadcrumb)
 
+    default_theme = bridge.loadConfig('theme')
+    
     # 產生 rel_path_html 與 cur_dir 給模板
     rel_path_html = rel_path
     # 讀取外部 HTML template
@@ -351,7 +370,8 @@ def main():
     html = html_tpl.replace('{{folder_tags}}', folder_tags) \
       .replace('{{img_tags}}', img_tags) \
       .replace('{{rel_path}}', rel_path_html) \
-      .replace('{{cur_dir}}', cur_dir)
+      .replace('{{cur_dir}}', cur_dir) \
+      .replace('{{default_theme}}', default_theme)
     # baseUrl 設為專案根目錄，確保 static/ 可正確載入
     project_root = Path(__file__).parent
     base_url = QUrl.fromLocalFile(str(project_root) + os.sep)

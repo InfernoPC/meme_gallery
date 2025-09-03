@@ -1,0 +1,52 @@
+/* ===== Pink Color Theme ===== */
+.theme-pink {
+    /* ===== body ===== */
+    --body-bg-color: #fff0f6;
+
+    /* ===== toolbar and button ===== */
+    --toolbar-bg-color: #ffe4ec;
+    --button-bg-color: linear-gradient(160deg, #ffb6c1cc 0%, #ffe4ec 100%);
+    --button-fg-color: #c2185b;
+    --button-hover-bg-color: #f06292;
+    --button-hover-fg-color: #fff0f6;
+
+    /* ===== navbox and breadcrumb ===== */
+    --navbox-bg-color: linear-gradient(90deg, #f8bbd0 0%, #ffe4ec 100%);
+    --navbox-fg-color: #c2185b;
+    --breadcrumb-fg-color: #c2185b;
+    --breadcrumb-hover-fg-color: #ad1457;
+    --breadcrumb-hover-text-shadow-color: #f0629244;
+
+    /* ===== search box ===== */
+    --searchbox-bg-color: #f8bbd0d9;
+    --searchbox-fg-color: #c2185b;
+    --searchbox-border-color: #f06292;
+    --searchbox-input-color: #ad1457;
+    --searchbox-placeholder-color: #ca1966;
+
+    /* ===== context menu (right click menu) ===== */
+    --contextmenu-bg-color: #f8bbd0fa;
+    --contextmenu-box-shadow-color: #f0629288;
+    --contextmenu-fg-color: #c2185b;
+    --contextmenu-border-color: #f06292;
+    --contextmenu-item-hover-bg-color: #f06292;
+    --contextmenu-item-hover-fg-color: #fff0f6;
+
+    /* ===== folder and image box ===== */
+    --box-bg-color: #fce4ec;
+    --box-hover-border-color: #f06292;
+    --box-hover-shadow-color: #f8bbd0;
+
+    --folderthumb-shadow-color: #f0629266;
+
+    /* ===== folder name and image name ===== */
+    --name-color: #c2185b;
+
+    /* ===== hint ===== */
+    --hint-shadow-color: #f0629255;
+    --hint-border-color: #f06292;
+    --info-bg-color: #f8bbd0;
+    --info-fg-color: #c2185b;
+    --error-bg-color: #e57373;
+    --error-fg-color: #fff0f6;
+}

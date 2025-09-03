@@ -8,13 +8,15 @@
     <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
 </head>
 
-<body>
+<body class="{{default_theme}}">
     <div id="toolbar">
         <button id="btnNewFolder">建立資料夾</button>
         <button id="btnReloadAll">重新載入全部</button>
         <button id="btnPasteImage">貼上圖片</button>
         <button id="btnDownloadLineSticker">下載 Line 貼圖</button>
         <!-- 可擴充更多按鈕 -->
+        <button id="btnSettings" class="settings-btn">⚙️</button>
+
     </div>
     <div id="navbox">
         <span class="path" data-curr-dir="{{cur_dir}}">{{rel_path}}</span>
@@ -28,6 +30,21 @@
         {{img_tags}}
     </div>
     <div id="hint"></div>
+
+    <!-- 設定視窗 -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeSettings">&times;</span>
+            <h2>設定</h2>
+            <p>選擇主題：</p>
+            <select id="themeSelect">
+                <option value="">預設主題</option>
+                <option value="theme-pink">粉紅主題</option>
+                <option value="theme-greenapple">綠蘋果主題</option>
+                <!-- 可以新增更多主題 -->
+            </select>
+        </div>
+    </div>
     <script src="static/main.js"></script>
 </body>
 

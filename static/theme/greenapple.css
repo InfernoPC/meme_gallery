@@ -1,0 +1,52 @@
+/* ===== Green Apple Color Theme ===== */
+.theme-greenapple {
+    /* ===== body ===== */
+    --body-bg-color: #f0fff4;
+
+    /* ===== toolbar and button ===== */
+    --toolbar-bg-color: #d0f8ce;
+    --button-bg-color: linear-gradient(160deg, #a8e6a1cc 0%, #d0f8ce 100%);
+    --button-fg-color: #2e7d32;
+    --button-hover-bg-color: #66bb6a;
+    --button-hover-fg-color: #f0fff4;
+
+    /* ===== navbox and breadcrumb ===== */
+    --navbox-bg-color: linear-gradient(90deg, #b9f6ca 0%, #d0f8ce 100%);
+    --navbox-fg-color: #2e7d32;
+    --breadcrumb-fg-color: #2e7d32;
+    --breadcrumb-hover-fg-color: #1b5e20;
+    --breadcrumb-hover-text-shadow-color: #66bb6a44;
+
+    /* ===== search box ===== */
+    --searchbox-bg-color: #b9f6cad9;
+    --searchbox-fg-color: #2e7d32;
+    --searchbox-border-color: #66bb6a;
+    --searchbox-input-color: #1b5e20;
+    --searchbox-placeholder-color: #388e3c;
+
+    /* ===== context menu (right click menu) ===== */
+    --contextmenu-bg-color: #b9f6cafa;
+    --contextmenu-box-shadow-color: #66bb6a88;
+    --contextmenu-fg-color: #2e7d32;
+    --contextmenu-border-color: #66bb6a;
+    --contextmenu-item-hover-bg-color: #66bb6a;
+    --contextmenu-item-hover-fg-color: #f0fff4;
+
+    /* ===== folder and image box ===== */
+    --box-bg-color: #e0f7e9;
+    --box-hover-border-color: #66bb6a;
+    --box-hover-shadow-color: #b9f6ca;
+
+    --folderthumb-shadow-color: #66bb6a66;
+
+    /* ===== folder name and image name ===== */
+    --name-color: #2e7d32;
+
+    /* ===== hint ===== */
+    --hint-shadow-color: #66bb6a55;
+    --hint-border-color: #66bb6a;
+    --info-bg-color: #b9f6ca;
+    --info-fg-color: #2e7d32;
+    --error-bg-color: #e57373;
+    --error-fg-color: #f0fff4;
+}
