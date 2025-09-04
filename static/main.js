@@ -265,7 +265,23 @@ new QWebChannel(qt.webChannelTransport, function (channel) {
     // 打開設定視窗
     btnSettings.addEventListener("click", () => {
         modal.style.display = "block";
+
+        loadConfig();
     });
+
+    function loadConfig() {
+        bridge.loadConfig("theme", (theme) => {
+            // 先清掉所有 active
+            document.querySelectorAll('#configsMenu .options li')
+                .forEach(opt => opt.classList.remove('active'));
+
+            // 設定目前主題為 active
+            const activeOpt = document.querySelector(`#configsMenu .options li[data-value="${theme}"]`);
+            if (activeOpt) {
+                activeOpt.classList.add('active');
+            }
+        });
+    }
 
     // 關閉設定視窗
     closeBtn.addEventListener("click", () => {
@@ -279,16 +295,27 @@ new QWebChannel(qt.webChannelTransport, function (channel) {
         }
     });
 
+    document.querySelectorAll('#configsMenu .options li').forEach(li => {
+        li.addEventListener('click', () => {
+            // 先清掉所有 active
+            document.querySelectorAll('#configsMenu .options li')
+                .forEach(opt => opt.classList.remove('active'));
 
-    const themeSelect = document.getElementById("themeSelect");
-    themeSelect.addEventListener("change", (e) => {
-        const themeName = e.target.value;
+            // 設定目前被點的為 active
+            li.classList.add('active');
 
-        document.body.className = ""; // 清掉舊 class
-        if (themeName) {
-            document.body.classList.add(themeName);
-        }
-        bridge.saveConfig("theme", themeName);
+            // 取出 data-value
+            const themeClass = li.dataset.value;
 
+            // 移除舊的 theme class
+            document.body.className = ""; 
+
+            // 如果不是預設，就套用新主題
+            if (themeClass) {
+                document.body.classList.add(themeClass);
+            }
+            bridge.saveConfig("theme", themeClass);
+        });
     });
+
 });

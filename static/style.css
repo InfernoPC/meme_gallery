@@ -97,6 +97,44 @@ body::-webkit-scrollbar {
     cursor: pointer;
 }
 
+/* ===== Theme Options List ===== */
+/* 自訂選單容器 */
+#configsMenu .options {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0;
+  border: 1px solid var(--config-border-color);
+  border-radius: 8px;
+  /* overflow: hidden; */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+/* 選單項目 */
+#configsMenu .options li {
+  padding: 10px;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+}
+
+/* hover 效果 */
+#configsMenu .options li:hover {
+  background: var(--button-hover-bg-color);
+  color: var(--button-hover-fg-color);
+}
+
+/* 被選中的項目高亮 */
+#configsMenu .options li.active {
+  background: var(--button-bg-color);
+  color: var(--button-fg-color);
+  font-weight: bold;
+}
+
 /* ===== Navigation Bar and Breadcrumb ===== */
 #navbox {
     position: fixed;

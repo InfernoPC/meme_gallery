@@ -80,7 +80,12 @@
    - 在 `static/template.html` 的主題切換區塊，新增一個按鈕或選單項目：
 
     ```html
-    <option value="theme-mytheme">我的主題</option>
+    <p>選擇主題：</p>
+    <ul class="options">
+        <li data-value="">預設</li>
+        ... 其他主題選項 ...
+        <li data-value="theme-mytheme">我的主題</li>
+    </ul>
     ```
 
    - 這樣就能在前端切換到你的新主題！
