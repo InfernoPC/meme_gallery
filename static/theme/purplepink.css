@@ -1,0 +1,57 @@
+/* ===== Purple Pink Color Theme ===== */
+.theme-purplepink {
+    /* ===== body ===== */
+    --body-bg-color: #faf0ff;
+
+    /* ===== toolbar and button ===== */
+    --toolbar-bg-color: #f3e5f5;
+    --button-bg-color: linear-gradient(160deg, #e1bee7cc 0%, #f3e5f5 100%);
+    --button-fg-color: #6a1b9a;
+    --button-hover-bg-color: #ab47bc;
+    --button-hover-fg-color: #faf0ff;
+
+    /* ===== navbox and breadcrumb ===== */
+    --navbox-bg-color: linear-gradient(90deg, #e1bee7 0%, #f3e5f5 100%);
+    --navbox-fg-color: #6a1b9a;
+    --breadcrumb-fg-color: #6a1b9a;
+    --breadcrumb-hover-fg-color: #4a148c;
+    --breadcrumb-hover-text-shadow-color: #ab47bc44;
+
+    /* ===== search box ===== */
+    --searchbox-bg-color: #e1bee7d9;
+    --searchbox-fg-color: #6a1b9a;
+    --searchbox-border-color: #ab47bc;
+    --searchbox-input-color: #4a148c;
+    --searchbox-placeholder-color: #7b1fa2;
+
+    /* ===== context menu (right click menu) ===== */
+    --contextmenu-bg-color: #e1bee7fa;
+    --contextmenu-box-shadow-color: #ab47bc88;
+    --contextmenu-fg-color: #6a1b9a;
+    --contextmenu-border-color: #ab47bc;
+    --contextmenu-item-hover-bg-color: #ab47bc;
+    --contextmenu-item-hover-fg-color: #faf0ff;
+
+    /* ===== folder and image box ===== */
+    --box-bg-color: #f3e5f5;
+    --box-hover-border-color: #ab47bc;
+    --box-hover-shadow-color: #e1bee7;
+
+    --folderthumb-shadow-color: #ab47bc66;
+
+    /* ===== folder name and image name ===== */
+    --name-color: #6a1b9a;
+
+    /* ===== hint ===== */
+    --hint-shadow-color: #ab47bc55;
+    --hint-border-color: #ab47bc;
+    --info-bg-color: #e1bee7;
+    --info-fg-color: #6a1b9a;
+    --error-bg-color: #ce93d8;
+    --error-fg-color: #faf0ff;
+
+    /* ===== config ===== */
+    --config-bg-color: #f3e5f5;
+    --config-fg-color: #6a1b9a;
+    --config-border-color: #ab47bc;
+}

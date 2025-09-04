@@ -1,0 +1,57 @@
+/* ===== Sapphire Deep Blue Theme ===== */
+.theme-deepblue {
+    /* ===== body ===== */
+    --body-bg-color: #00152a; /* 更深的藍黑，像藍寶石的底色 */
+
+    /* ===== toolbar and button ===== */
+    --toolbar-bg-color: #002d66;
+    --button-bg-color: linear-gradient(160deg, #0073e6 0%, #004B97 100%);
+    --button-fg-color: #e6f7ff;
+    --button-hover-bg-color: #3399ff;
+    --button-hover-fg-color: #ffffff;
+
+    /* ===== navbox and breadcrumb ===== */
+    --navbox-bg-color: linear-gradient(90deg, #004080 0%, #00152a 100%);
+    --navbox-fg-color: #99ddff;
+    --breadcrumb-fg-color: #66c2ff;
+    --breadcrumb-hover-fg-color: #ffffff;
+    --breadcrumb-hover-text-shadow-color: #33bbff99;
+
+    /* ===== search box ===== */
+    --searchbox-bg-color: #00284dd9;
+    --searchbox-fg-color: #b3e0ff;
+    --searchbox-border-color: #33bbff;
+    --searchbox-input-color: #e6f7ff;
+    --searchbox-placeholder-color: #80ccff;
+
+    /* ===== context menu ===== */
+    --contextmenu-bg-color: #003366fa;
+    --contextmenu-box-shadow-color: #3399ff99;
+    --contextmenu-fg-color: #d6f0ff;
+    --contextmenu-border-color: #3399ff;
+    --contextmenu-item-hover-bg-color: #0066cc;
+    --contextmenu-item-hover-fg-color: #ffffff;
+
+    /* ===== folder and image box ===== */
+    --box-bg-color: #003d66;
+    --box-hover-border-color: #33bbff;
+    --box-hover-shadow-color: #66ccff88;
+
+    --folderthumb-shadow-color: #00224499;
+
+    /* ===== folder name and image name ===== */
+    --name-color: #aaddff;
+
+    /* ===== hint ===== */
+    --hint-shadow-color: #0073e655;
+    --hint-border-color: #33bbff;
+    --info-bg-color: #004B97cc;
+    --info-fg-color: #e6f7ff;
+    --error-bg-color: #cc3344;
+    --error-fg-color: #ffffff;
+
+    /* ===== config ===== */
+    --config-bg-color: #002d66;
+    --config-fg-color: #cceeff;
+    --config-border-color: #33bbff;
+}

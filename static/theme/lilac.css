@@ -1,0 +1,57 @@
+/* ===== Lilac Rose Theme (Deep Purple with Pink Tint) ===== */
+.theme-lilac {
+    /* ===== body ===== */
+    --body-bg-color: #2a1b2d; /* 深紫底，帶點粉感 */
+
+    /* ===== toolbar and button ===== */
+    --toolbar-bg-color: #3a2147;
+    --button-bg-color: linear-gradient(160deg, #943bbd 0%, #712286 100%);
+    --button-fg-color: #ffe6f7;
+    --button-hover-bg-color: #e083ff;
+    --button-hover-fg-color: #ffffff;
+
+    /* ===== navbox and breadcrumb ===== */
+    --navbox-bg-color: linear-gradient(90deg, #5a2b73 0%, #2a1b2d 100%);
+    --navbox-fg-color: #f0caff;
+    --breadcrumb-fg-color: #f9d8ff;
+    --breadcrumb-hover-fg-color: #ffe6ff;
+    --breadcrumb-hover-text-shadow-color: #ffb3e699;
+
+    /* ===== search box ===== */
+    --searchbox-bg-color: #372042e6;
+    --searchbox-fg-color: #f2c6ff;
+    --searchbox-border-color: #b268ca;
+    --searchbox-input-color: #ffffff;
+    --searchbox-placeholder-color: #d8a7e5;
+
+    /* ===== context menu ===== */
+    --contextmenu-bg-color: #4a2c5afa;
+    --contextmenu-box-shadow-color: #e083ff99;
+    --contextmenu-fg-color: #ffe6ff;
+    --contextmenu-border-color: #b84dce;
+    --contextmenu-item-hover-bg-color: #d16bff;
+    --contextmenu-item-hover-fg-color: #ffffff;
+
+    /* ===== folder and image box ===== */
+    --box-bg-color: #512c66;
+    --box-hover-border-color: #e083ff;
+    --box-hover-shadow-color: #f2a6ff99;
+
+    --folderthumb-shadow-color: #00000066;
+
+    /* ===== folder name and image name ===== */
+    --name-color: #f5d4ff;
+
+    /* ===== hint ===== */
+    --hint-shadow-color: #d16bff55;
+    --hint-border-color: #e083ff;
+    --info-bg-color: #b84dceaa;
+    --info-fg-color: #ffe6ff;
+    --error-bg-color: #e44f7a;
+    --error-fg-color: #ffffff;
+
+    /* ===== config ===== */
+    --config-bg-color: #3a2147;
+    --config-fg-color: #f5d4ff;
+    --config-border-color: #d16bff;
+}

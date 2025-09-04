@@ -258,7 +258,7 @@ new QWebChannel(qt.webChannelTransport, function (channel) {
     }
 
     // 設定視窗
-    const modal = document.getElementById("settingsModal");
+    const modal = document.getElementById("configsMenu");
     const btnSettings = document.getElementById("btnSettings");
     const closeBtn = document.getElementById("closeSettings");
 

@@ -49,4 +49,9 @@
     --info-fg-color: #b0c4de;
     --error-bg-color: #ca4552;
     --error-fg-color: #b0c4de;
+
+    /* ===== config ===== */
+    --config-bg-color: #232a36;
+    --config-fg-color: #b0c4de;
+    --config-border-color: #555c6b;
 }
