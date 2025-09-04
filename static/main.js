@@ -140,19 +140,19 @@ new QWebChannel(qt.webChannelTransport, function (channel) {
             const base = dotIdx > 0 ? oldName.slice(0, dotIdx) : oldName;
             const ext = dotIdx > 0 ? oldName.slice(dotIdx) : '';
             createContextMenu([{
-                    label: '刪除圖片',
-                    action: function () {
-                        if (confirm('確定要刪除圖片嗎？')) {
-                            bridge.deleteFile(oldPath);
-                        }
-                    }
-                },
-                {
                     label: '變更名稱',
                     action: function () {
                         const input = prompt('變更檔案名稱：', base);
                         if (input && input !== base) {
                             bridge.renameFile(oldPath, input + ext);
+                        }
+                    }
+                },
+                {
+                    label: '刪除圖片',
+                    action: function () {
+                        if (confirm('確定要刪除圖片嗎？')) {
+                            bridge.deleteFile(oldPath);
                         }
                     }
                 }

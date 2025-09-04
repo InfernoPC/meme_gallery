@@ -310,7 +310,7 @@ def main():
     # 非最上層才顯示 ..
     if os.path.normpath(cur_dir) != os.path.normpath(base_img_dir):
       parent_path = os.path.dirname(cur_dir)
-      folder_tags += f'<div class="folderbox" data-folder="{parent_path}" data-up="1"><div class="foldericon">⬆️</div><div class="foldername">..</div></div>'
+      folder_tags += f'<div class="folderbox" data-folder="{parent_path}" data-up="1"><div class="foldericon">⬆️</div><div class="foldername">回上層</div></div>'
     for folder in folders:
       folder_path = os.path.abspath(os.path.join(cur_dir, folder))
       
