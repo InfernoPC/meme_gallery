@@ -3,4 +3,3 @@ PyQt6-WebEngine
 pillow
 beautifulsoup4
 requests
-python-dotenv
